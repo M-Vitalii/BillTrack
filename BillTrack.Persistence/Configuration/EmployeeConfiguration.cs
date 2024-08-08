@@ -8,8 +8,6 @@ public class EmployeeConfiguration : IEntityTypeConfiguration<Employee>
 {
     public void Configure(EntityTypeBuilder<Employee> builder)
     {
-        builder.HasKey(e => e.Id);
-
         builder.Property(e => e.Email)
             .HasMaxLength(100)
             .IsRequired();

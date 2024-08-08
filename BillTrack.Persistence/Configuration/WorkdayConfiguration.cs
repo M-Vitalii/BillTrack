@@ -8,8 +8,6 @@ public class WorkdayConfiguration : IEntityTypeConfiguration<Workday>
 {
     public void Configure(EntityTypeBuilder<Workday> builder)
     {
-        builder.HasKey(w => w.Id);
-
         builder.Property(w => w.Date)
             .IsRequired();
 

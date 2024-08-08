@@ -8,8 +8,6 @@ public class InvoiceConfiguration : IEntityTypeConfiguration<Invoice>
 {
     public void Configure(EntityTypeBuilder<Invoice> builder)
     {
-        builder.HasKey(i => i.Id);
-
         builder.Property(i => i.Month)
             .IsRequired();
 
