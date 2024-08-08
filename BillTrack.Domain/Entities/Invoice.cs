@@ -1,8 +1,7 @@
 namespace BillTrack.Domain.Entities;
 
-public class Invoice
+public class Invoice : BaseEntity
 {
-    public Guid Id { get; set; }
     public int Month { get; set; }
     public int Year { get; set; }
     public Guid EmployeeId { get; set; }

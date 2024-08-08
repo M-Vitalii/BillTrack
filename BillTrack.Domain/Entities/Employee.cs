@@ -1,8 +1,7 @@
 namespace BillTrack.Domain.Entities;
 
-public class Employee
+public class Employee : BaseEntity
 {
-    public Guid Id { get; set; }
     public required string Email { get; set; }
     public required string Firstname { get; set; }
     public required string Lastname { get; set; }
