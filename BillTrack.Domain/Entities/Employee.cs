@@ -1,6 +1,6 @@
 namespace BillTrack.Domain.Entities;
 
-public class Employee : BaseEntity
+public class Employee : AuditableEntity
 {
     public required string Email { get; set; }
     public required string Firstname { get; set; }

@@ -1,6 +1,6 @@
 namespace BillTrack.Domain.Entities;
 
-public class Invoice : BaseEntity
+public class Invoice : AuditableEntity
 {
     public int Month { get; set; }
     public int Year { get; set; }

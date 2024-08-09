@@ -1,6 +1,6 @@
 namespace BillTrack.Domain.Entities;
 
-public class Workday : BaseEntity
+public class Workday : AuditableEntity
 {
     public DateOnly Date { get; set; }
     public TimeOnly Hours { get; set; }
