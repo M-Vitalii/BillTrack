@@ -1,0 +1,17 @@
+version: "3.8"
+services:
+  bill_track_db:
+    image: postgres:latest
+    restart: always
+    environment:
+      POSTGRES_DB: bill_track_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - '5433:5432'
+    volumes:
+      - bill_track_db:/var/lib/postgresql/data
+
+volumes:
+  bill_track_db:
+    driver: local

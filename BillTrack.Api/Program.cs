@@ -1,11 +1,16 @@
+using BillTrack.Api.Configurations;
 using FastEndpoints;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddFastEndpoints();
+//builder.Services.AddFastEndpoints();
+
+builder.Services
+    .ConfigureInterceptors()
+    .ConfigureDatabase(builder.Configuration);
 
 var app = builder.Build();
 
-app.UseFastEndpoints();
+//app.UseFastEndpoints();
 
 app.Run();
