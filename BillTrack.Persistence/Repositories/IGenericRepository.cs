@@ -1,9 +1,9 @@
 namespace BillTrack.Persistence.Repositories;
 
-interface ICrudRepository<T>
+interface IGenericRepository<T>
 {
     ValueTask<T?> GetByIdAsync(Guid id);
-    Task<List<T>> GetAllAsync();
+    IQueryable<T> GetAllAsync();
     Task<T> AddAsync(T entity);
     Task UpdateAsync(T entity);
     Task DeleteAsync(T entity);
