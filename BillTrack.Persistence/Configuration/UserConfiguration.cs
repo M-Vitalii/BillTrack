@@ -4,10 +4,12 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace BillTrack.Persistence.Configuration;
 
-public class UserConfiguration : IEntityTypeConfiguration<User>
+public class UserConfiguration : BaseConfiguration<User>
 {
-    public void Configure(EntityTypeBuilder<User> builder)
+    public override void Configure(EntityTypeBuilder<User> builder)
     {
+        base.Configure(builder);
+        
         builder.Property(u => u.Email)
             .HasMaxLength(100)
             .IsRequired();

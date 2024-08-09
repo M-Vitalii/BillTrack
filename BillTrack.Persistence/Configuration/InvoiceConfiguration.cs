@@ -4,10 +4,12 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace BillTrack.Persistence.Configuration;
 
-public class InvoiceConfiguration : IEntityTypeConfiguration<Invoice>
+public class InvoiceConfiguration : BaseConfiguration<Invoice>
 {
-    public void Configure(EntityTypeBuilder<Invoice> builder)
+    public override void Configure(EntityTypeBuilder<Invoice> builder)
     {
+        base.Configure(builder);
+        
         builder.Property(i => i.Month)
             .IsRequired();
 
@@ -17,13 +19,9 @@ public class InvoiceConfiguration : IEntityTypeConfiguration<Invoice>
         builder.Property(i => i.EmployeeId)
             .IsRequired();
 
-        builder.HasIndex(i => i.EmployeeId)
-            .IsUnique();
-
         builder.HasOne(i => i.Employee)
             .WithMany(e => e.Invoices)
-            .HasForeignKey(i => i.EmployeeId)
-            .OnDelete(DeleteBehavior.Cascade);
+            .HasForeignKey(i => i.EmployeeId);
 
         builder.ToTable(it => it.HasCheckConstraint("CK_Invoice_Month", "\"Month\" > 0 AND \"Month\" < 13"));
         builder.ToTable(it => it.HasCheckConstraint("CK_Invoice_Year", "\"Year\" > 0"));

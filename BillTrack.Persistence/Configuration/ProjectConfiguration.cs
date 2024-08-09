@@ -4,17 +4,18 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace BillTrack.Persistence.Configuration;
 
-public class ProjectConfiguration : IEntityTypeConfiguration<Project>
+public class ProjectConfiguration : BaseConfiguration<Project>
 {
-    public void Configure(EntityTypeBuilder<Project> builder)
+    public override void Configure(EntityTypeBuilder<Project> builder)
     {
+        base.Configure(builder);
+        
         builder.Property(p => p.Name)
             .HasMaxLength(100)
             .IsRequired();
 
         builder.HasMany(p => p.Employees)
             .WithOne(e => e.Project)
-            .HasForeignKey(e => e.ProjectId)
-            .OnDelete(DeleteBehavior.Cascade);
+            .HasForeignKey(e => e.ProjectId);
     }
 }

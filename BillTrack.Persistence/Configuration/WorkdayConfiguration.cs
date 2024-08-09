@@ -4,10 +4,12 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace BillTrack.Persistence.Configuration;
 
-public class WorkdayConfiguration : IEntityTypeConfiguration<Workday>
+public class WorkdayConfiguration : BaseConfiguration<Workday>
 {
-    public void Configure(EntityTypeBuilder<Workday> builder)
+    public override void Configure(EntityTypeBuilder<Workday> builder)
     {
+        base.Configure(builder);
+        
         builder.Property(w => w.Date)
             .IsRequired();
 
@@ -16,8 +18,5 @@ public class WorkdayConfiguration : IEntityTypeConfiguration<Workday>
 
         builder.Property(w => w.EmployeeId)
             .IsRequired();
-
-        builder.HasIndex(w => w.EmployeeId)
-            .IsUnique();
     }
 }
