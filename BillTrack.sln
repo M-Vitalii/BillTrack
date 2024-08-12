@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BillTrack.Domain", "BillTra
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BillTrack.Persistence", "BillTrack.Persistence\BillTrack.Persistence.csproj", "{12CE22E1-3B77-4589-BA68-0818BD4311E8}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BillTrack.Core", "BillTrack.Core\BillTrack.Core.csproj", "{5131B5A5-880E-4E18-942B-6C0ABD4D7BC8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{12CE22E1-3B77-4589-BA68-0818BD4311E8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{12CE22E1-3B77-4589-BA68-0818BD4311E8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{12CE22E1-3B77-4589-BA68-0818BD4311E8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5131B5A5-880E-4E18-942B-6C0ABD4D7BC8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5131B5A5-880E-4E18-942B-6C0ABD4D7BC8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5131B5A5-880E-4E18-942B-6C0ABD4D7BC8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5131B5A5-880E-4E18-942B-6C0ABD4D7BC8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
