@@ -1,3 +1,4 @@
+using BillTrack.Core.Interfaces.Repositories;
 using BillTrack.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
