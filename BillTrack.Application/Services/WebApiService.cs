@@ -1,9 +1,10 @@
 using BillTrack.Core.Interfaces.Repositories;
+using BillTrack.Core.Interfaces.Services;
 using BillTrack.Domain.Entities;
 
 namespace BillTrack.Application.Services;
 
-public class WebApiService
+public class WebApiService : IWebApiService
 {
     private readonly Dictionary<Type, object> _repositories;
 
