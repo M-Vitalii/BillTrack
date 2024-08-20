@@ -15,6 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\BillTrack.Application\BillTrack.Application.csproj" />
     <ProjectReference Include="..\BillTrack.Domain\BillTrack.Domain.csproj" />
     <ProjectReference Include="..\BillTrack.Persistence\BillTrack.Persistence.csproj" />
   </ItemGroup>
