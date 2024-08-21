@@ -1,3 +1,4 @@
+using BillTrack.Core.Exceptions;
 using BillTrack.Core.Interfaces.Repositories;
 using BillTrack.Core.Interfaces.Services;
 using BillTrack.Domain.Entities;
@@ -40,9 +41,9 @@ public class WebApiService : IWebApiService
         return await GetRepository<T>().AddAsync(entity);
     }
 
-    public async Task<T?> GetByIdAsync<T>(Guid id) where T : AuditableEntity
+    public async Task<T> GetByIdAsync<T>(Guid id) where T : AuditableEntity
     {
-        return await GetRepository<T>().GetByIdAsync(id);
+        return await GetByIdAsyncOrThrow(GetRepository<T>(), id);
     }
 
     public IQueryable<T> GetAll<T>() where T : AuditableEntity
@@ -59,13 +60,18 @@ public class WebApiService : IWebApiService
     {
         IGenericRepository<T> repository = GetRepository<T>();
     
+        await repository.DeleteAsync(await GetByIdAsyncOrThrow(repository, id));
+    }
+
+    private async Task<T> GetByIdAsyncOrThrow<T>(IGenericRepository<T> repository, Guid id) where T : AuditableEntity
+    {
         var entity = await repository.GetByIdAsync(id);
         
         if (entity == null)
         {
-            throw new InvalidOperationException($"Entity of type {typeof(T)} with ID {id} not found.");
+            throw new NotFoundException($"Entity of type {typeof(T)} with ID {id} not found.");
         }
-    
-        await repository.DeleteAsync(entity);
+
+        return entity;
     }
 }
