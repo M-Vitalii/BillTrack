@@ -6,7 +6,7 @@ namespace BillTrack.Core.AutoMapperProfiles;
 
 public class DepartmentProfile : Profile
 {
-    protected DepartmentProfile()
+    public DepartmentProfile()
     {
         CreateMap<DepartmentRequest, Department>()
             .ForMember(o => o.Id, opt => opt.Ignore());

@@ -6,7 +6,7 @@ namespace BillTrack.Core.AutoMapperProfiles;
 
 public class ProjectProfile : Profile
 {
-    protected ProjectProfile()
+    public ProjectProfile()
     {
         CreateMap<ProjectRequest, Project>()
             .ForMember(o => o.Id, opt => opt.Ignore());
