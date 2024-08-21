@@ -1,9 +1,9 @@
 using BillTrack.Core.Contracts.Employee;
-using FluentValidation;
+using FastEndpoints;
 
-namespace BillTrack.Core.Validations;
+namespace BillTrack.Api.Validators;
 
-public class EmployeeValidator : AbstractValidator<EmployeeRequest>
+public class EmployeeValidator : Validator<EmployeeRequest>
 {
     public EmployeeValidator()
     {
