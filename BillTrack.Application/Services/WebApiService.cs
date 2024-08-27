@@ -2,38 +2,22 @@ using BillTrack.Core.Exceptions;
 using BillTrack.Core.Interfaces.Repositories;
 using BillTrack.Core.Interfaces.Services;
 using BillTrack.Domain.Entities;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace BillTrack.Application.Services;
 
 public class WebApiService : IWebApiService
 {
-    private readonly Dictionary<Type, object> _repositories;
+    private IServiceScope _scope;
 
-    public WebApiService(
-        IGenericRepository<Project> projectRepository,
-        IGenericRepository<Department> departmentRepository,
-        IGenericRepository<Invoice> invoiceRepository,
-        IGenericRepository<Workday> workdayRepository,
-        IGenericRepository<Employee> employeeRepository)
+    public WebApiService(IServiceScopeFactory serviceScopeFactory)
     {
-        _repositories = new Dictionary<Type, object>
-        {
-            { typeof(Project), projectRepository },
-            { typeof(Department), departmentRepository },
-            { typeof(Invoice), invoiceRepository },
-            { typeof(Workday), workdayRepository },
-            { typeof(Employee), employeeRepository },
-        };
+        _scope = serviceScopeFactory.CreateScope();
     }
     
     private IGenericRepository<T> GetRepository<T>() where T : AuditableEntity
     {
-        if (_repositories.TryGetValue(typeof(T), out var repository))
-        { 
-            return (IGenericRepository<T>)repository;
-        }
-
-        throw new InvalidOperationException($"Repository for type {typeof(T)} not found.");
+        return this._scope.ServiceProvider.GetRequiredService<IGenericRepository<T>>();
     }
     
     public async Task<T> CreateAsync<T>(T entity) where T : AuditableEntity
