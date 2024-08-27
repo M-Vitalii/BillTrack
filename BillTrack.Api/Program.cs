@@ -3,14 +3,16 @@ using FastEndpoints;
 
 var builder = WebApplication.CreateBuilder(args);
 
-//builder.Services.AddFastEndpoints();
+builder.Services.AddFastEndpoints();
 
 builder.Services
     .ConfigureInterceptors()
-    .ConfigureDatabase(builder.Configuration);
+    .ConfigureDatabase(builder.Configuration)
+    .ConfigureRepositories()
+    .ConfigureServices();
 
 var app = builder.Build();
 
-//app.UseFastEndpoints();
+app.UseFastEndpoints();
 
 app.Run();
