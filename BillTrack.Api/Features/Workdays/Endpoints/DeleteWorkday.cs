@@ -8,7 +8,7 @@ public class DeleteWorkday : EndpointWithoutRequest
 {
     private readonly IWebApiService _webApiService;
     
-    public DeleteWorkday(IMapper mapper, IWebApiService webApiService)
+    public DeleteWorkday(IWebApiService webApiService)
     {
         _webApiService = webApiService;
     }

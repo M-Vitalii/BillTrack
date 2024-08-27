@@ -1,13 +1,14 @@
-using AutoMapper.QueryableExtensions;
+using BillTrack.Core.Contracts;
 using BillTrack.Core.Contracts.Workday;
 using BillTrack.Core.Interfaces.Services;
+using BillTrack.Core.Models;
 using BillTrack.Domain.Entities;
 using FastEndpoints;
 using IMapper = AutoMapper.IMapper;
 
 namespace BillTrack.Api.Features.Workdays.Endpoints;
 
-public class GetAllWorkdays : EndpointWithoutRequest<IQueryable<WorkdayResponse>>
+public class GetAllWorkdays : Endpoint<PaginationRequest, PagedResult<WorkdayResponse>>
 {
     private readonly IWebApiService _webApiService;
     private readonly IMapper _mapper;
@@ -24,12 +25,17 @@ public class GetAllWorkdays : EndpointWithoutRequest<IQueryable<WorkdayResponse>
         AllowAnonymous();
     }
     
-    public override async Task HandleAsync(CancellationToken c)
+    public override async Task HandleAsync(PaginationRequest r, CancellationToken c)
     {
-        var entities = _webApiService.GetAll<Workday>();
+        var entities = await _webApiService.GetAllPagedAsync<Workday>(r.Page, r.PageSize);
         
-        Response = entities.ProjectTo<WorkdayResponse>(_mapper.ConfigurationProvider);
+        Response = new PagedResult<WorkdayResponse>
+        {
+            Items = _mapper.Map<List<WorkdayResponse>>(entities.Items),
+            PageNumber = entities.PageNumber,
+            PageSize = entities.PageSize,
+        };
         
-        await SendAsync(Response);
+        await SendAsync(Response, cancellation: c);
     }
 }

@@ -8,7 +8,7 @@ public class DeleteInvoice : EndpointWithoutRequest
 {
     private readonly IWebApiService _webApiService;
     
-    public DeleteInvoice(IMapper mapper, IWebApiService webApiService)
+    public DeleteInvoice(IWebApiService webApiService)
     {
         _webApiService = webApiService;
     }

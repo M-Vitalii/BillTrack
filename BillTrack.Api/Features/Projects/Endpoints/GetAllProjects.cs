@@ -1,14 +1,14 @@
-using AutoMapper.QueryableExtensions;
-using BillTrack.Core.Contracts.Employee;
+using BillTrack.Core.Contracts;
 using BillTrack.Core.Contracts.Project;
 using BillTrack.Core.Interfaces.Services;
+using BillTrack.Core.Models;
 using BillTrack.Domain.Entities;
 using FastEndpoints;
 using IMapper = AutoMapper.IMapper;
 
 namespace BillTrack.Api.Features.Projects.Endpoints;
 
-public class GetAllProjects : EndpointWithoutRequest<IQueryable<ProjectResponse>>
+public class GetAllProjects : Endpoint<PaginationRequest, PagedResult<ProjectResponse>>
 {
     private readonly IWebApiService _webApiService;
     private readonly IMapper _mapper;
@@ -21,16 +21,21 @@ public class GetAllProjects : EndpointWithoutRequest<IQueryable<ProjectResponse>
     
     public override void Configure()
     {
-        Get("employees");
+        Get("projects");
         AllowAnonymous();
     }
     
-    public override async Task HandleAsync(CancellationToken c)
+    public override async Task HandleAsync(PaginationRequest r, CancellationToken c)
     {
-        var entities = _webApiService.GetAll<Project>();
+        var entities = await _webApiService.GetAllPagedAsync<Project>(r.Page, r.PageSize);
         
-        Response = entities.ProjectTo<ProjectResponse>(_mapper.ConfigurationProvider);
+        Response = new PagedResult<ProjectResponse>
+        {
+            Items = _mapper.Map<List<ProjectResponse>>(entities.Items),
+            PageNumber = entities.PageNumber,
+            PageSize = entities.PageSize,
+        };
         
-        await SendAsync(Response);
+        await SendAsync(Response, cancellation: c);
     }
 }

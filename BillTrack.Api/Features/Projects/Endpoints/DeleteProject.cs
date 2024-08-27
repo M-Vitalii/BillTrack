@@ -8,7 +8,7 @@ public class DeleteProject : EndpointWithoutRequest
 {
     private readonly IWebApiService _webApiService;
     
-    public DeleteProject(IMapper mapper, IWebApiService webApiService)
+    public DeleteProject(IWebApiService webApiService)
     {
         _webApiService = webApiService;
     }

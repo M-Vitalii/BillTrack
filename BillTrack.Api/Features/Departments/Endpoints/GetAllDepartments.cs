@@ -1,13 +1,15 @@
 using AutoMapper.QueryableExtensions;
+using BillTrack.Core.Contracts;
 using BillTrack.Core.Contracts.Department;
 using BillTrack.Core.Interfaces.Services;
+using BillTrack.Core.Models;
 using BillTrack.Domain.Entities;
 using FastEndpoints;
 using IMapper = AutoMapper.IMapper;
 
 namespace BillTrack.Api.Features.Departments.Endpoints;
 
-public class GetAllDepartments : EndpointWithoutRequest<IQueryable<DepartmentResponse>>
+public class GetAllDepartments : Endpoint<PaginationRequest, PagedResult<DepartmentResponse>>
 {
     private readonly IWebApiService _webApiService;
     private readonly IMapper _mapper;
@@ -24,12 +26,17 @@ public class GetAllDepartments : EndpointWithoutRequest<IQueryable<DepartmentRes
         AllowAnonymous();
     }
     
-    public override async Task HandleAsync(CancellationToken c)
+    public override async Task HandleAsync(PaginationRequest r, CancellationToken c)
     {
-        var entities = _webApiService.GetAll<Department>();
+        var entities = await _webApiService.GetAllPagedAsync<Department>(r.Page, r.PageSize);
         
-        Response = entities.ProjectTo<DepartmentResponse>(_mapper.ConfigurationProvider);
+        Response = new PagedResult<DepartmentResponse>
+        {
+            Items = _mapper.Map<List<DepartmentResponse>>(entities.Items),
+            PageNumber = entities.PageNumber,
+            PageSize = entities.PageSize,
+        };
         
-        await SendAsync(Response);
+        await SendAsync(Response, cancellation: c);
     }
 }

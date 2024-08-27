@@ -8,7 +8,7 @@ public class DeleteEmployee : EndpointWithoutRequest
 {
     private readonly IWebApiService _webApiService;
     
-    public DeleteEmployee(IMapper mapper, IWebApiService webApiService)
+    public DeleteEmployee(IWebApiService webApiService)
     {
         _webApiService = webApiService;
     }
