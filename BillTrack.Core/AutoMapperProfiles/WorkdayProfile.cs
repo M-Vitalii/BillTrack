@@ -6,7 +6,7 @@ namespace BillTrack.Core.AutoMapperProfiles;
 
 public class WorkdayProfile : Profile
 {
-    protected WorkdayProfile()
+    public WorkdayProfile()
     {
         CreateMap<WorkdayRequest, Workday>()
             .ForMember(o => o.Id, opt => opt.Ignore());

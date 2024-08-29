@@ -1,9 +1,9 @@
 using BillTrack.Core.Contracts.Project;
-using FluentValidation;
+using FastEndpoints;
 
-namespace BillTrack.Core.Validations;
+namespace BillTrack.Api.Validators;
 
-public class ProjectValidator : AbstractValidator<ProjectRequest>
+public class ProjectValidator : Validator<ProjectRequest>
 {
     public ProjectValidator()
     {

@@ -6,7 +6,7 @@ namespace BillTrack.Core.AutoMapperProfiles;
 
 public class InvoiceProfile : Profile
 {
-    protected InvoiceProfile()
+    public InvoiceProfile()
     {
         CreateMap<InvoiceRequest, Invoice>()
             .ForMember(o => o.Id, opt => opt.Ignore());

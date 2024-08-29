@@ -1,9 +1,9 @@
 using BillTrack.Core.Contracts.Invoice;
-using FluentValidation;
+using FastEndpoints;
 
-namespace BillTrack.Core.Validations;
+namespace BillTrack.Api.Validators;
 
-public class InvoiceValidator : AbstractValidator<InvoiceRequest>
+public class InvoiceValidator : Validator<InvoiceRequest>
 {
     public InvoiceValidator()
     {

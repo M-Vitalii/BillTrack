@@ -1,6 +1,9 @@
+using BillTrack.Core.Exceptions;
 using BillTrack.Core.Interfaces.Repositories;
 using BillTrack.Core.Interfaces.Services;
+using BillTrack.Core.Models;
 using BillTrack.Domain.Entities;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace BillTrack.Application.Services;
@@ -29,9 +32,19 @@ public class WebApiService : IWebApiService
         return await GetByIdAsyncOrThrow(GetRepository<T>(), id);
     }
 
-    public IQueryable<T> GetAll<T>() where T : AuditableEntity
+    public async Task<PagedResult<T>> GetAllPagedAsync<T>(int pageNumber, int pageSize) where T : AuditableEntity
     {
-        return GetRepository<T>().GetAllAsync();
+        var items = await GetRepository<T>().GetAllAsync()
+            .Skip((pageNumber - 1) * pageSize)
+            .Take(pageSize)
+            .ToListAsync();
+
+        return new PagedResult<T>
+        {
+            Items = items,
+            PageNumber = pageNumber,
+            PageSize = pageSize,
+        };
     }
 
     public async Task UpdateAsync<T>(Guid id, T entity) where T : AuditableEntity
@@ -41,9 +54,11 @@ public class WebApiService : IWebApiService
 
     public async Task DeleteAsync<T>(Guid id) where T : AuditableEntity
     {
-        IGenericRepository<T> repository = GetRepository<T>();
+        var repository = GetRepository<T>();
+
+        var entity = await GetByIdAsyncOrThrow(repository, id);
     
-        await repository.DeleteAsync(await GetByIdAsyncOrThrow(repository, id));
+        await repository.DeleteAsync(entity);
     }
 
     private async Task<T> GetByIdAsyncOrThrow<T>(IGenericRepository<T> repository, Guid id) where T : AuditableEntity

@@ -7,7 +7,7 @@ namespace BillTrack.Core.AutoMapperProfiles;
 
 public class EmployeeProfile : Profile
 {
-    protected EmployeeProfile()
+    public EmployeeProfile()
     {
         CreateMap<EmployeeRequest, Employee>()
             .ForMember(o => o.Id, opt => opt.Ignore());
