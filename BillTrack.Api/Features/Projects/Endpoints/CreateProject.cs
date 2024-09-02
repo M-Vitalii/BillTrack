@@ -20,7 +20,6 @@ public class CreateProject : Endpoint<ProjectRequest, ProjectResponse>
     public override void Configure()
     {
         Post("projects");
-        AllowAnonymous();
     }
     
     public override async Task HandleAsync(ProjectRequest r, CancellationToken c)

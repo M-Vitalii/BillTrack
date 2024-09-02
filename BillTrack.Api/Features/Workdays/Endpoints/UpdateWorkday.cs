@@ -20,7 +20,6 @@ public class UpdateWorkday : Endpoint<WorkdayRequest>
     public override void Configure()
     {
         Put("workdays/{id}");
-        AllowAnonymous();
     }
     
     public override async Task HandleAsync(WorkdayRequest r, CancellationToken c)

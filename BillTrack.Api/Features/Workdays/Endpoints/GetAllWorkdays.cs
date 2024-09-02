@@ -22,7 +22,6 @@ public class GetAllWorkdays : Endpoint<PaginationRequest, PagedResult<WorkdayRes
     public override void Configure()
     {
         Get("workdays");
-        AllowAnonymous();
     }
     
     public override async Task HandleAsync(PaginationRequest r, CancellationToken c)

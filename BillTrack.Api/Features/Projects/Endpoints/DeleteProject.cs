@@ -16,7 +16,6 @@ public class DeleteProject : EndpointWithoutRequest
     public override void Configure()
     {
         Delete("projects/{id}");
-        AllowAnonymous();
     }
     
     public override async Task HandleAsync(CancellationToken c)

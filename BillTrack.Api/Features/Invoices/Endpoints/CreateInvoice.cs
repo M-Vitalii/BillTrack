@@ -20,7 +20,6 @@ public class CreateInvoice : Endpoint<InvoiceRequest, InvoiceResponse>
     public override void Configure()
     {
         Post("invoices");
-        AllowAnonymous();
     }
     
     public override async Task HandleAsync(InvoiceRequest r, CancellationToken c)

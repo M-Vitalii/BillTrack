@@ -21,7 +21,6 @@ public class GetByIdEmployee : EndpointWithoutRequest<EmployeeResponse>
     public override void Configure()
     {
         Get("employee/{id}");
-        AllowAnonymous();
     }
     
     public override async Task HandleAsync(CancellationToken c)

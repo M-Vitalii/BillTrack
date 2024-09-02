@@ -16,7 +16,6 @@ public class DeleteWorkday : EndpointWithoutRequest
     public override void Configure()
     {
         Delete("workdays/{id}");
-        AllowAnonymous();
     }
     
     public override async Task HandleAsync(CancellationToken c)

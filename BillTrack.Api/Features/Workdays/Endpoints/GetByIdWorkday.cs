@@ -20,7 +20,6 @@ public class GetByIdWorkday : EndpointWithoutRequest<WorkdayResponse>
     public override void Configure()
     {
         Get("workdays/{id}");
-        AllowAnonymous();
     }
     
     public override async Task HandleAsync(CancellationToken c)

@@ -20,7 +20,6 @@ public class CreateEmployee : Endpoint<EmployeeRequest, EmployeeResponse>
     public override void Configure()
     {
         Post("employees");
-        AllowAnonymous();
     }
     
     public override async Task HandleAsync(EmployeeRequest r, CancellationToken c)

@@ -22,7 +22,6 @@ public class GetByIdProject : EndpointWithoutRequest<ProjectResponse>
     public override void Configure()
     {
         Get("projects/{id}");
-        AllowAnonymous();
     }
     
     public override async Task HandleAsync(CancellationToken c)

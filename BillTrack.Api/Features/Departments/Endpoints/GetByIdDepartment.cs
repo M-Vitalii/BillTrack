@@ -20,7 +20,6 @@ public class GetByIdDepartment : EndpointWithoutRequest<DepartmentResponse>
     public override void Configure()
     {
         Get("departments/{id}");
-        AllowAnonymous();
     }
     
     public override async Task HandleAsync(CancellationToken c)

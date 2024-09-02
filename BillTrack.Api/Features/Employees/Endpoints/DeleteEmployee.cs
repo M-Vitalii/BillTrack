@@ -16,7 +16,6 @@ public class DeleteEmployee : EndpointWithoutRequest
     public override void Configure()
     {
         Delete("employees/{id}");
-        AllowAnonymous();
     }
     
     public override async Task HandleAsync(CancellationToken c)

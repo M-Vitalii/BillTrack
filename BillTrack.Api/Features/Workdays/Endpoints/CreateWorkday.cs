@@ -20,7 +20,6 @@ public class CreateWorkday : Endpoint<WorkdayRequest, WorkdayResponse>
     public override void Configure()
     {
         Post("workdays");
-        AllowAnonymous();
     }
     
     public override async Task HandleAsync(WorkdayRequest r, CancellationToken c)
