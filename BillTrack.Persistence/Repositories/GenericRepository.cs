@@ -1,3 +1,4 @@
+using System.Linq.Expressions;
 using BillTrack.Core.Interfaces.Repositories;
 using BillTrack.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
@@ -35,5 +36,10 @@ public class GenericRepository<TEntity> : IGenericRepository<TEntity> where TEnt
     {
         _dbContext.Set<TEntity>().Remove(entity);
         await _dbContext.SaveChangesAsync();
+    }
+    
+    public async Task<TEntity?> FindAsync(Expression<Func<TEntity, bool>> predicate)
+    {
+        return await _dbContext.Set<TEntity>().FirstOrDefaultAsync(predicate);
     }
 }
