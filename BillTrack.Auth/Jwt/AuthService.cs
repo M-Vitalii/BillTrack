@@ -1,15 +1,12 @@
 using System.Security.Claims;
-using System.Security.Cryptography;
-using System.Text;
 using BillTrack.Core.Exceptions;
 using BillTrack.Core.Interfaces.Repositories;
 using BillTrack.Core.Interfaces.Services;
+using BillTrack.Core.Interfaces.Utils;
 using BillTrack.Domain.Entities;
-using FastEndpoints;
 using FastEndpoints.Security;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.JsonWebTokens;
-using Microsoft.IdentityModel.Tokens;
 
 namespace BillTrack.Auth.Jwt;
 
@@ -17,40 +14,48 @@ public class AuthService : IAuthService
 {
     private readonly IGenericRepository<User> _userRepository;
     private readonly IConfiguration _configuration;
+    private readonly IPasswordHasher _passwordHasher;
 
-    public AuthService(IGenericRepository<User> userRepository, IConfiguration configuration)
+    public AuthService(
+        IGenericRepository<User> userRepository, 
+        IConfiguration configuration,
+        IPasswordHasher passwordHasher)
     {
         _userRepository = userRepository;
         _configuration = configuration;
+        _passwordHasher = passwordHasher;
     }
 
     public async Task<string> GenerateToken(string username, string password)
     {
-        var userId = await CheckCredential(username, password);
+        var userId = await ValidateAndGetUserId(username, password);
 
-        return JwtBearer.CreateToken(
-            o =>
-            {
-                o.SigningKey = _configuration["JwtSecretKey"] ?? string.Empty;
-                o.User.Claims.Add(new Claim(JwtRegisteredClaimNames.Sub, userId.ToString()));
-                o.ExpireAt = DateTime.UtcNow.AddDays(1);
-            });
+        return CreateJwtToken(userId);
     }
 
-    private async Task<Guid> CheckCredential(string username, string password)
+    private async Task<Guid> ValidateAndGetUserId(string username, string password)
     {
-        var user = await _userRepository.FindAsync(u => u.Email == username && u.Password == HashPassword(password));
+        var user = await _userRepository.FindAsync(u => u.Email == username);
 
-        if (user == null)
+        if (user == null || !_passwordHasher.Verify(user.Password, password))
         {
-            throw new NotFoundException($"Entity of type {typeof(User)} with name {username} not found.");
+            throw new NotFoundException("The user name and/or password is invalid.");
         }
 
         return user.Id;
     }
 
-    private string HashPassword(string password)
+    private string CreateJwtToken(Guid userId)
     {
-        return Convert.ToBase64String(SHA256.Create().ComputeHash(Encoding.UTF8.GetBytes(password)));
+        var signingKey = _configuration["JwtSecretKey"] ??
+                         throw new InvalidOperationException("JWT Secret Key is missing.");
+
+        return JwtBearer.CreateToken(
+            o =>
+            {
+                o.SigningKey = signingKey;
+                o.User.Claims.Add(new Claim(JwtRegisteredClaimNames.Sub, userId.ToString()));
+                o.ExpireAt = DateTime.UtcNow.AddDays(1);
+            });
     }
 }
