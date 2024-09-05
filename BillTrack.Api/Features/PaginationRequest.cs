@@ -1,6 +1,6 @@
 using FastEndpoints;
 
-namespace BillTrack.Core.Contracts;
+namespace BillTrack.Api.Features;
 
 public class PaginationRequest
 {

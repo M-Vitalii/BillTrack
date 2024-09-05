@@ -22,7 +22,6 @@ public class GetAllInvoices : Endpoint<PaginationRequest, PagedResult<InvoiceRes
     public override void Configure()
     {
         Get("invoices");
-        AllowAnonymous();
     }
     
     public override async Task HandleAsync(PaginationRequest r, CancellationToken c)

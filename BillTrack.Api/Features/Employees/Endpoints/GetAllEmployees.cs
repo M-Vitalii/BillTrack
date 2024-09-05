@@ -22,7 +22,6 @@ public class GetAllEmployees : Endpoint<PaginationRequest, PagedResult<EmployeeR
     public override void Configure()
     {
         Get("employees");
-        AllowAnonymous();
     }
     
     public override async Task HandleAsync(PaginationRequest r, CancellationToken c)

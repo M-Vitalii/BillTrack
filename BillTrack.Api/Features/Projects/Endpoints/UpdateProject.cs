@@ -22,7 +22,6 @@ public class UpdateProject : Endpoint<ProjectRequest>
     public override void Configure()
     {
         Put("projects/{id}");
-        AllowAnonymous();
     }
     
     public override async Task HandleAsync(ProjectRequest r, CancellationToken c)

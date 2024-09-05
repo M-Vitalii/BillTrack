@@ -22,7 +22,6 @@ public class GetAllProjects : Endpoint<PaginationRequest, PagedResult<ProjectRes
     public override void Configure()
     {
         Get("projects");
-        AllowAnonymous();
     }
     
     public override async Task HandleAsync(PaginationRequest r, CancellationToken c)

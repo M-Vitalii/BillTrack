@@ -16,7 +16,6 @@ public class DeleteInvoice : EndpointWithoutRequest
     public override void Configure()
     {
         Delete("invoices/{id}");
-        AllowAnonymous();
     }
     
     public override async Task HandleAsync(CancellationToken c)

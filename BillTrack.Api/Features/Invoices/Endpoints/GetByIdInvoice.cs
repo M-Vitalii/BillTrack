@@ -20,7 +20,6 @@ public class GetByIdInvoice : EndpointWithoutRequest<InvoiceResponse>
     public override void Configure()
     {
         Get("invoices/{id}");
-        AllowAnonymous();
     }
     
     public override async Task HandleAsync(CancellationToken c)

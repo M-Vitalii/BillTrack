@@ -23,7 +23,6 @@ public class GetAllDepartments : Endpoint<PaginationRequest, PagedResult<Departm
     public override void Configure()
     {
         Get("departments");
-        AllowAnonymous();
     }
     
     public override async Task HandleAsync(PaginationRequest r, CancellationToken c)

@@ -20,7 +20,6 @@ public class CreateDepartment : Endpoint<DepartmentRequest, DepartmentResponse>
     public override void Configure()
     {
         Post("departments");
-        AllowAnonymous();
     }
     
     public override async Task HandleAsync(DepartmentRequest r, CancellationToken c)

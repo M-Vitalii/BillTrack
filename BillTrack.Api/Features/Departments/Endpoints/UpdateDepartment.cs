@@ -20,7 +20,6 @@ public class UpdateDepartment : Endpoint<DepartmentRequest>
     public override void Configure()
     {
         Put("departments/{id}");
-        AllowAnonymous();
     }
     
     public override async Task HandleAsync(DepartmentRequest r, CancellationToken c)

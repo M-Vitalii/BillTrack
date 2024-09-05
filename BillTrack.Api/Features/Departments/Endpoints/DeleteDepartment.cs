@@ -17,7 +17,6 @@ public class DeleteDepartment : EndpointWithoutRequest
     public override void Configure()
     {
         Delete("departments/{id}");
-        AllowAnonymous();
     }
     
     public override async Task HandleAsync(CancellationToken c)

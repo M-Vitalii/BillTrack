@@ -21,7 +21,6 @@ public class UpdateEmployee : Endpoint<EmployeeRequest>
     public override void Configure()
     {
         Put("employees/{id}");
-        AllowAnonymous();
     }
     
     public override async Task HandleAsync(EmployeeRequest r, CancellationToken c)

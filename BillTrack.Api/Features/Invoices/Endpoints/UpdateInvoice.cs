@@ -20,7 +20,6 @@ public class UpdateInvoice : Endpoint<InvoiceRequest>
     public override void Configure()
     {
         Put("invoices/{id}");
-        AllowAnonymous();
     }
     
     public override async Task HandleAsync(InvoiceRequest r, CancellationToken c)
