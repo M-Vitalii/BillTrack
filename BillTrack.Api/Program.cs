@@ -1,10 +1,13 @@
 global using FluentValidation;
+using Amazon.SQS;
 using BillTrack.Api.Configurations;
 using FastEndpoints;
 using FastEndpoints.Security;
 using FastEndpoints.Swagger;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddDefaultAWSOptions(builder.Configuration.GetAWSOptions());
 
 builder.Services
     .AddAuthenticationJwtBearer(s => s.SigningKey = builder.Configuration["JwtSecretKey"])
@@ -21,7 +24,12 @@ builder.Services
     .ConfigureServices()
     .ConfigureMappers();
 
+builder.Services.AddAWSService<IAmazonSQS>();
+builder.Services.AddAWSLambdaHosting(LambdaEventSource.HttpApi);
+
 var app = builder.Build();
+
+await app.UseDatabaseMigrations();
 
 app.Seed();
 

@@ -10,6 +10,7 @@ public static class ServicesConfiguration
     {
         services.AddScoped<IWebApiService, WebApiService>();
         services.AddScoped<IAuthService, AuthService>();
+        services.AddScoped<ISqsPublisher, SqsPublisher>();
 
         return services;
     }
