@@ -24,8 +24,14 @@ builder.Services
     .ConfigureServices()
     .ConfigureMappers();
 
+builder.Services.AddMemoryCache();
+
 builder.Services.AddAWSService<IAmazonSQS>();
-builder.Services.AddAWSLambdaHosting(LambdaEventSource.HttpApi);
+
+if (!builder.Environment.IsDevelopment())
+{
+    builder.Services.AddAWSLambdaHosting(LambdaEventSource.HttpApi);
+}
 
 var app = builder.Build();
 
