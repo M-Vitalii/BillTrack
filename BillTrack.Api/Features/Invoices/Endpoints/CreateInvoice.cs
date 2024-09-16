@@ -12,18 +12,11 @@ public class CreateInvoice : Endpoint<InvoiceRequest, InvoiceResponse>
 {
     private readonly IMapper _mapper;
     private readonly IWebApiService _webApiService;
-    private readonly ISqsPublisher _sqsPublisher;
-    private readonly IConfiguration _configuration;
-    private readonly ILogger<CreateInvoice> _logger;
 
-    public CreateInvoice(IMapper mapper, IWebApiService webApiService, ISqsPublisher sqsPublisher,
-        IConfiguration configuration, ILogger<CreateInvoice> logger)
+    public CreateInvoice(IMapper mapper, IWebApiService webApiService)
     {
         _mapper = mapper;
         _webApiService = webApiService;
-        _sqsPublisher = sqsPublisher;
-        _configuration = configuration;
-        _logger = logger;
     }
 
     public override void Configure()
@@ -35,13 +28,13 @@ public class CreateInvoice : Endpoint<InvoiceRequest, InvoiceResponse>
     {
         var newEntity = await _webApiService.CreateAsync(_mapper.Map<Invoice>(r));
         Response = _mapper.Map<InvoiceResponse>(newEntity);
+
+        var message = new CreatedInvoice
+        {
+            InvoiceId = newEntity.Id
+        };
         
-        await _sqsPublisher.PublishAsync(
-            _configuration.GetValue<string>("QueueName")!,
-            new CreatedInvoice
-            {
-                InvoiceId = newEntity.Id
-            });
+        await _webApiService.PublishSqsMessageAsync(message);
 
         await SendAsync(Response);
     }
