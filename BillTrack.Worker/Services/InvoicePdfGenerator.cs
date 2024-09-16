@@ -9,16 +9,16 @@ using QuestPDF.Fluent;
 using QuestPDF.Infrastructure;
 
 namespace BillTrack.Worker.Services;
-public class PdfGenerator : IPdfGenerator
+public class InvoicePdfGenerator : IFileGenerator
 {
     private readonly IGenericRepository<Invoice> _invoiceRepository;
 
-    public PdfGenerator(IGenericRepository<Invoice> invoiceRepository)
+    public InvoicePdfGenerator(IGenericRepository<Invoice> invoiceRepository)
     {
         _invoiceRepository = invoiceRepository;
     }
 
-    public async Task<Stream> GeneratePdf(Guid invoiceId)
+    public async Task<Stream> GenerateFile(Guid invoiceId)
     {
         QuestPDF.Settings.License = LicenseType.Community;
 
