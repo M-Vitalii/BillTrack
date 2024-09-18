@@ -22,7 +22,7 @@ public static class UserInitializer
                     new User
                     {
                         Email = "default_user@email.com", 
-                        Password = "r9uYP5zrRh6IUAzzMvOpEyCyN8h2mAw4luVNv5tJYlE="
+                        Password = "9EBA5B4C48DDD855168F207CBFA2D1C9;69FBADCCAC9D53FAE8106E8A371904ABFC7B11E87F2FD3B4AA22F985B0E7A6BF"
                     }
                 );
 
