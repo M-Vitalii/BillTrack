@@ -1,4 +1,4 @@
-namespace BillTrack.Core.Models;
+namespace BillTrack.Core.Models.WebApi;
 
 public class PagedResult<T>
 {

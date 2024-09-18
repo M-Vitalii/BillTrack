@@ -1,4 +1,5 @@
 using BillTrack.Core.Models;
+using BillTrack.Core.Models.WebApi;
 using BillTrack.Domain.Entities;
 
 namespace BillTrack.Core.Interfaces.Services;

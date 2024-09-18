@@ -5,6 +5,7 @@ using BillTrack.Core.Exceptions;
 using BillTrack.Core.Interfaces.Repositories;
 using BillTrack.Core.Interfaces.Services;
 using BillTrack.Core.Models;
+using BillTrack.Core.Models.WebApi;
 using BillTrack.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
