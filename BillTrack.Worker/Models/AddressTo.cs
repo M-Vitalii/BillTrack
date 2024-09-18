@@ -1,3 +1,4 @@
+using BillTrack.Core.Models.Worker;
 using BillTrack.Domain.Entities;
 using QuestPDF.Fluent;
 using QuestPDF.Infrastructure;
@@ -7,12 +8,12 @@ namespace BillTrack.Worker.Models;
 public class AddressTo : IComponent
 {
     private string Title { get; }
-    private Employee Employee { get; }
+    private EmployeeWorkSummary EmployeeWorkSummary { get; }
 
-    public AddressTo(string title, Employee employee)
+    public AddressTo(string title, EmployeeWorkSummary employeeWorkSummary)
     {
         Title = title;
-        Employee = employee;
+        EmployeeWorkSummary = employeeWorkSummary;
     }
         
     public void Compose(IContainer container)
@@ -24,8 +25,8 @@ public class AddressTo : IComponent
             column.Item().Text(Title).SemiBold();
             column.Item().PaddingBottom(5).LineHorizontal(1); 
                 
-            column.Item().Text($"{Employee.Firstname} {Employee.Lastname}");
-            column.Item().Text($"{Employee.Email}");
+            column.Item().Text($"{EmployeeWorkSummary.FullName}");
+            column.Item().Text($"{EmployeeWorkSummary.Email}");
         });
     }
 }

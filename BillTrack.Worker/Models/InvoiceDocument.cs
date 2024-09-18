@@ -1,3 +1,4 @@
+using BillTrack.Core.Models.Worker;
 using QuestPDF.Fluent;
 using QuestPDF.Helpers;
 using QuestPDF.Infrastructure;
@@ -6,8 +7,6 @@ namespace BillTrack.Worker.Models;
 
 public class InvoiceDocument : IDocument
 {
-    public static Image LogoImage { get; } = Image.FromFile(".\\logo.png");
-
     public InvoiceModel Model { get; }
 
     public InvoiceDocument(InvoiceModel model)
@@ -52,8 +51,6 @@ public class InvoiceDocument : IDocument
                     text.Span($"{Model.IssueDate:d}");
                 });
             });
-
-            //row.ConstantItem(15).Image(Placeholders.Image);
         });
     }
 
@@ -65,14 +62,14 @@ public class InvoiceDocument : IDocument
 
             column.Item().Row(row =>
             {
-                row.RelativeItem().Component(new AddressFrom("From", Model.Employee));
+                row.RelativeItem().Component(new AddressFrom("From", Model.EmployeeWorkSummary));
                 row.ConstantItem(50);
-                row.RelativeItem().Component(new AddressTo("For", Model.Employee));
+                row.RelativeItem().Component(new AddressTo("For", Model.EmployeeWorkSummary));
             });
 
             column.Item().Element(ComposeTable);
 
-            var totalPrice = Model.Employee.Salary;
+            var totalPrice = Model.EmployeeWorkSummary.CalculatedSalary;
             column.Item().PaddingRight(5).AlignRight().Text($"Grand total: {totalPrice:C}").SemiBold();
         });
     }
@@ -96,16 +93,18 @@ public class InvoiceDocument : IDocument
             {
                 header.Cell().Text("#");
                 header.Cell().Text("Product").Style(headerStyle);
-                header.Cell().AlignRight().Text("Salary").Style(headerStyle);
-                header.Cell().AlignRight().Text("Total").Style(headerStyle);
+                header.Cell().AlignRight().Text("hours").Style(headerStyle);
+                header.Cell().AlignRight().Text("Hourly rate").Style(headerStyle);
+                header.Cell().AlignRight().Text("Amount").Style(headerStyle);
 
                 header.Cell().ColumnSpan(5).PaddingTop(5).BorderBottom(1).BorderColor(Colors.Black);
             });
 
             table.Cell().Element(CellStyle).Text($"1");
-            table.Cell().Element(CellStyle).Text(Model.Employee.Project.Name);
-            table.Cell().Element(CellStyle).AlignRight().Text($"{Model.Employee.Salary:C}");
-            table.Cell().Element(CellStyle).AlignRight().Text($"{Model.Employee.Salary:C}");
+            table.Cell().Element(CellStyle).Text(Model.EmployeeWorkSummary.ProjectName);
+            table.Cell().Element(CellStyle).AlignRight().Text($"{Model.EmployeeWorkSummary.TotalHoursWorked}");
+            table.Cell().Element(CellStyle).AlignRight().Text($"{Model.EmployeeWorkSummary.HourlyRate:C}");
+            table.Cell().Element(CellStyle).AlignRight().Text($"{Model.EmployeeWorkSummary.CalculatedSalary:C}");
 
             static IContainer CellStyle(IContainer container) =>
                 container.BorderBottom(1).BorderColor(Colors.Grey.Lighten2).PaddingVertical(5);
