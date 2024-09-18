@@ -22,7 +22,7 @@ public class SqsPublisher : ISqsPublisher
 
     public async Task PublishMessageAsync<T>(T message)
     {
-        var queueName = _configuration.GetValue<string>("QUEUE_NAME");
+        var queueName = _configuration.GetValue<string>("QueueName");
 
         var queueUrl = await _memoryCache.GetOrCreateAsync(queueName, async entry =>
         {
