@@ -36,6 +36,7 @@
     <PackageReference Include="Serilog.Sinks.Console" Version="6.0.0" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\BillTrack.Application\BillTrack.Application.csproj" />
     <ProjectReference Include="..\BillTrack.Core\BillTrack.Core.csproj" />
     <ProjectReference Include="..\BillTrack.Persistence\BillTrack.Persistence.csproj" />
   </ItemGroup>
