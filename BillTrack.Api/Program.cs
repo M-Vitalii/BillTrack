@@ -19,6 +19,7 @@ builder.Logging.AddConsole();
 
 builder.Services
     .ConfigureInterceptors()
+    .ConfigureAppSettings(builder.Configuration)
     .ConfigureDatabase(builder.Configuration)
     .ConfigureRepositories()
     .ConfigureServices()
