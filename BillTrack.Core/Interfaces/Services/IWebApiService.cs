@@ -1,3 +1,4 @@
+using BillTrack.Core.Interfaces.Models;
 using BillTrack.Core.Models;
 using BillTrack.Core.Models.WebApi;
 using BillTrack.Domain.Entities;
@@ -11,5 +12,5 @@ public interface IWebApiService
     Task<PagedResult<T>> GetAllPagedAsync<T>(int pageNumber, int pageSize) where T : AuditableEntity;
     Task UpdateAsync<T>(Guid id, T entity) where T : AuditableEntity;
     Task DeleteAsync<T>(Guid id) where T : AuditableEntity;
-    Task PublishSqsMessageAsync<T>(T message);
+    Task PublishSqsMessageAsync<T>(string queueName, T message) where T : IMessage;
 }
