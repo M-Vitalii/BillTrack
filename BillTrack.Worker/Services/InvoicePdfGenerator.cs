@@ -8,7 +8,7 @@ using QuestPDF.Fluent;
 using QuestPDF.Infrastructure;
 
 namespace BillTrack.Worker.Services;
-public class InvoicePdfGenerator : IFileGenerator
+public class InvoicePdfGenerator : IPdfGenerator
 {
     private readonly IGenericRepository<Invoice> _invoiceRepository;
     private readonly IEmployeeSalaryCalculator _employeeSalaryCalculator;
@@ -19,7 +19,7 @@ public class InvoicePdfGenerator : IFileGenerator
         _employeeSalaryCalculator = employeeSalaryCalculator;
     }
 
-    public async Task<Stream> GenerateFile(Guid invoiceId)
+    public async Task<Stream> GeneratePdfStream(Guid invoiceId)
     {
         Settings.License = LicenseType.Community;
 

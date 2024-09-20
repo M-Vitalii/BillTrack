@@ -6,23 +6,23 @@ using BillTrack.Domain.Entities;
 
 namespace BillTrack.Worker.Services;
 
-public class InvoicePdfUploader : IFileUploader
+public class S3FileUploader : IS3FileUploader
 {
     private readonly IAmazonS3 _s3Client;
     
-    public InvoicePdfUploader(IAmazonS3 s3Client)
+    public S3FileUploader(IAmazonS3 s3Client)
     {
         _s3Client = s3Client;
     }
 
-    public async Task UploadFileToS3(Stream pdfStream, string bucketName, string fileName, Guid invoiceId)
+    public async Task UploadFileToS3(Stream fileStream, string bucketName, string fileName, string contentType)
     {
         var request = new PutObjectRequest
         {
             BucketName = bucketName,
             Key = fileName,
-            InputStream = pdfStream,
-            ContentType = "application/pdf"
+            InputStream = fileStream,
+            ContentType = contentType
         };
 
         await _s3Client.PutObjectAsync(request);
