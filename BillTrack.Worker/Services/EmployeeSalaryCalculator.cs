@@ -22,7 +22,7 @@ public class EmployeeSalaryCalculator : IEmployeeSalaryCalculator
 
         var weekdaysInMonth = GetWeekdaysInMonth(firstDayOfMonth, lastDayOfMonth);
 
-        var maxPossibleHours = weekdaysInMonth * 8;
+        var defaultWorkHours = weekdaysInMonth * 8;
 
         var employee = await _employeeRepository.GetByIdAsync(invoice.EmployeeId,
             e => e.Department,
@@ -38,9 +38,11 @@ public class EmployeeSalaryCalculator : IEmployeeSalaryCalculator
             .Where(w => w.Date >= firstDayOfMonth && w.Date <= lastDayOfMonth)
             .Sum(w => w.Hours);
 
-        var hourlyRate = employee.Salary / maxPossibleHours;
+        var hourlyRate = employee.Salary / defaultWorkHours;
 
         var calculatedSalary = hourlyRate * totalHoursWorked;
+        calculatedSalary = Math.Round(calculatedSalary, 2, MidpointRounding.AwayFromZero);
+
 
         return new EmployeeWorkSummary
         {
