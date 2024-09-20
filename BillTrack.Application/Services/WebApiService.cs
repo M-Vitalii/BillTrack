@@ -2,6 +2,7 @@ using System.Text.Json;
 using Amazon.SQS;
 using Amazon.SQS.Model;
 using BillTrack.Core.Exceptions;
+using BillTrack.Core.Interfaces.Models;
 using BillTrack.Core.Interfaces.Repositories;
 using BillTrack.Core.Interfaces.Services;
 using BillTrack.Core.Models;
@@ -81,8 +82,8 @@ public class WebApiService : IWebApiService
         return entity;
     }
     
-    public async Task PublishSqsMessageAsync<T>(T message)
+    public async Task PublishSqsMessageAsync<T>(string queueName, T message) where T : IMessage
     {
-        await _sqsPublisher.PublishMessageAsync(message);
+        await _sqsPublisher.PublishMessageAsync(queueName, message);
     }
 }

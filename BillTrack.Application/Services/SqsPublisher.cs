@@ -1,40 +1,47 @@
 using System.Text.Json;
 using Amazon.SQS;
 using Amazon.SQS.Model;
+using BillTrack.Core.Interfaces.Models;
 using BillTrack.Core.Interfaces.Services;
-using Microsoft.Extensions.Caching.Memory;
-using Microsoft.Extensions.Configuration;
 
 namespace BillTrack.Application.Services;
 
 public class SqsPublisher : ISqsPublisher
 {
     private readonly IAmazonSQS _sqs;
-    private readonly IMemoryCache _memoryCache;
-    private readonly IConfiguration _configuration;
+    private IDictionary<string, string> _cachedQueueUrl;
 
-    public SqsPublisher(IAmazonSQS sqs, IMemoryCache memoryCache, IConfiguration configuration)
+
+    public SqsPublisher(IAmazonSQS sqs)
     {
         _sqs = sqs;
-        _memoryCache = memoryCache;
-        _configuration = configuration;
+        _cachedQueueUrl = new Dictionary<string, string>();
     }
 
-    public async Task PublishMessageAsync<T>(T message)
+    public async Task PublishMessageAsync<T>(string queueName, T message) where T : IMessage
     {
-        var queueName = _configuration.GetValue<string>("QueueName");
-
-        var queueUrl = await _memoryCache.GetOrCreateAsync(queueName, async entry =>
+        if (!_cachedQueueUrl.TryGetValue(queueName, out var queueUrl))
         {
-            entry.Priority = CacheItemPriority.NeverRemove;
-            var response = await _sqs.GetQueueUrlAsync(queueName);
-            return response.QueueUrl;
-        });
-        
+            var getQueueUrlResponse = await _sqs.GetQueueUrlAsync(queueName);
+            queueUrl = getQueueUrlResponse.QueueUrl;
+            _cachedQueueUrl[queueName] = queueUrl;
+        }
+
         var request = new SendMessageRequest
         {
             QueueUrl = queueUrl,
-            MessageBody = JsonSerializer.Serialize(message)
+            MessageBody = JsonSerializer.Serialize(message),
+            MessageAttributes = new Dictionary<string, MessageAttributeValue>
+            {
+                {
+                    "MessageType",
+                    new MessageAttributeValue
+                    {
+                        DataType = "String",
+                        StringValue = message.MessageType
+                    }
+                }
+            }
         };
 
         await _sqs.SendMessageAsync(request);
