@@ -1,7 +1,7 @@
 using BillTrack.Core.Contracts.Workday;
 using FastEndpoints;
 
-namespace BillTrack.Api.Validators;
+namespace BillTrack.Api.Validators.Workday;
 
 public class WorkdayValidator : Validator<WorkdayRequest>
 {

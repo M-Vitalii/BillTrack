@@ -10,7 +10,9 @@ public class ProjectProfile : Profile
     {
         CreateMap<ProjectRequest, Project>()
             .ForMember(o => o.Id, opt => opt.Ignore());
-        
+
+        CreateMap<ProjectUpdateRequest, Project>();
+            
         CreateMap<Project, ProjectResponse>();
     }
 }

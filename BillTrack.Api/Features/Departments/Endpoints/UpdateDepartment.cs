@@ -6,7 +6,7 @@ using IMapper = AutoMapper.IMapper;
 
 namespace BillTrack.Api.Features.Departments.Endpoints;
 
-public class UpdateDepartment : Endpoint<DepartmentRequest>
+public class UpdateDepartment : Endpoint<DepartmentUpdateRequest>
 {
     private readonly IMapper _mapper;
     private readonly IWebApiService _webApiService;
@@ -22,7 +22,7 @@ public class UpdateDepartment : Endpoint<DepartmentRequest>
         Put("departments/{id}");
     }
     
-    public override async Task HandleAsync(DepartmentRequest r, CancellationToken c)
+    public override async Task HandleAsync(DepartmentUpdateRequest r, CancellationToken c)
     {
         await _webApiService.UpdateAsync(Route<Guid>("id"), _mapper.Map<Department>(r));
         

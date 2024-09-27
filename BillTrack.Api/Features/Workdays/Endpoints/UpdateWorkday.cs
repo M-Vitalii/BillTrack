@@ -6,7 +6,7 @@ using IMapper = AutoMapper.IMapper;
 
 namespace BillTrack.Api.Features.Workdays.Endpoints;
 
-public class UpdateWorkday : Endpoint<WorkdayRequest>
+public class UpdateWorkday : Endpoint<WorkdayUpdateRequest>
 {
     private readonly IMapper _mapper;
     private readonly IWebApiService _webApiService;
@@ -22,7 +22,7 @@ public class UpdateWorkday : Endpoint<WorkdayRequest>
         Put("workdays/{id}");
     }
     
-    public override async Task HandleAsync(WorkdayRequest r, CancellationToken c)
+    public override async Task HandleAsync(WorkdayUpdateRequest r, CancellationToken c)
     {
         await _webApiService.UpdateAsync(Route<Guid>("id"), _mapper.Map<Workday>(r));
         

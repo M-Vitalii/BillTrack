@@ -1,12 +1,15 @@
 using BillTrack.Core.Contracts.Invoice;
 using FastEndpoints;
 
-namespace BillTrack.Api.Validators;
+namespace BillTrack.Api.Validators.Invoice;
 
-public class InvoiceValidator : Validator<InvoiceRequest>
+public class InvoiceUpdateValidator : Validator<InvoiceUpdateRequest>
 {
-    public InvoiceValidator()
+    public InvoiceUpdateValidator()
     {
+        RuleFor(i => i.Id)
+            .NotEmpty().WithMessage("Id can't be empty");
+        
         RuleFor(i => i.Month)
             .NotNull().WithMessage("Month can't be null")
             .InclusiveBetween(1, 12).WithMessage("Month must be in range of 1 to 12 inclusive");

@@ -11,6 +11,8 @@ public class WorkdayProfile : Profile
         CreateMap<WorkdayRequest, Workday>()
             .ForMember(o => o.Id, opt => opt.Ignore());
 
+        CreateMap<WorkdayUpdateRequest, Workday>();
+
         CreateMap<Workday, WorkdayResponse>();
     }
 }
