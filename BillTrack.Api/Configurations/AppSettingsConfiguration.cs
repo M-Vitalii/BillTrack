@@ -1,3 +1,5 @@
+using BillTrack.Core.Models;
+
 namespace BillTrack.Api.Configurations;
 
 public static class AppSettingsConfiguration

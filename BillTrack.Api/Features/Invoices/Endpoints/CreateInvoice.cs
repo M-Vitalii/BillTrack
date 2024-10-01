@@ -2,6 +2,7 @@ using BillTrack.Api.Configurations;
 using BillTrack.Core.Contracts.Invoice;
 using BillTrack.Core.Contracts.SqsMessages;
 using BillTrack.Core.Interfaces.Services;
+using BillTrack.Core.Models;
 using BillTrack.Domain.Entities;
 using FastEndpoints;
 using Microsoft.Extensions.Options;

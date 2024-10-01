@@ -1,6 +1,7 @@
 using BillTrack.Core.Contracts.SqsMessages;
 using BillTrack.Core.Interfaces.Repositories;
 using BillTrack.Core.Interfaces.Services;
+using BillTrack.Core.Models;
 using BillTrack.Domain.Entities;
 using BillTrack.Worker.Configurations;
 using Microsoft.Extensions.Options;
@@ -12,20 +13,20 @@ namespace BillTrack.Worker.Handlers;
 public class CreatedInvoiceMessageHandler : IMessageHandler<CreatedInvoice>
 {
     private readonly IPdfGenerator _pdfGenerator;
-    private readonly IS3FileUploader _s3FileUploader;
+    private readonly IS3FileService _is3FileService;
     private readonly IGenericRepository<Invoice> _invoiceRepository;
-    private readonly IOptions<AwsSettings> _appConfiguration;
+    private readonly IOptions<AwsSettings> _awsConfiguration;
 
     public CreatedInvoiceMessageHandler(
         IPdfGenerator pdfGenerator,
-        IS3FileUploader s3FileUploader,
+        IS3FileService is3FileService,
         IGenericRepository<Invoice> invoiceRepository,
-        IOptions<AwsSettings> appConfiguration)
+        IOptions<AwsSettings> awsConfiguration)
     {
         _pdfGenerator = pdfGenerator;
-        _s3FileUploader = s3FileUploader;
+        _is3FileService = is3FileService;
         _invoiceRepository = invoiceRepository;
-        _appConfiguration = appConfiguration;
+        _awsConfiguration = awsConfiguration;
     }
 
     public async Task HandleMessageAsync(CreatedInvoice invoice)
@@ -50,16 +51,19 @@ public class CreatedInvoiceMessageHandler : IMessageHandler<CreatedInvoice>
     private async Task GenerateAndUploadPdf(Guid invoiceId, string fileName)
     {
         var pdfStream = await _pdfGenerator.GeneratePdfStream(invoiceId);
-        await _s3FileUploader.UploadFileToS3(pdfStream, _appConfiguration.Value.BucketName, fileName, "application/pdf");
+        await _is3FileService.UploadFileToS3(pdfStream, _awsConfiguration.Value.InvoiceBucketName, fileName, "application/pdf");
     }
 
     private async Task UpdateInvoiceUrl(Guid invoiceId, string fileName)
     {
-        var invoiceUrl = $"https://{_appConfiguration.Value.BucketName}.s3.{_appConfiguration.Value.AwsRegion}.amazonaws.com/{fileName}";
+        var invoiceUrl = $"https://{_awsConfiguration.Value.InvoiceBucketName}.s3.{_awsConfiguration.Value.Region}.amazonaws.com/{fileName}";
         var invoice = await _invoiceRepository.GetByIdAsync(invoiceId);
 
         invoice.InvoiceUrl = invoiceUrl;
 
-        await _invoiceRepository.UpdateAsync(invoice);
+        using (LogContext.PushProperty("Invoice", invoice))
+        {
+            await _invoiceRepository.UpdateAsync(invoice);
+        }
     }
 }

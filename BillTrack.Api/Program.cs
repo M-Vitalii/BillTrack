@@ -1,4 +1,5 @@
 global using FluentValidation;
+using Amazon.S3;
 using Amazon.SQS;
 using BillTrack.Api.Configurations;
 using FastEndpoints;
@@ -42,6 +43,7 @@ builder.Services
 builder.Services.AddMemoryCache();
 
 builder.Services.AddAWSService<IAmazonSQS>();
+builder.Services.AddAWSService<IAmazonS3>();
 
 if (!builder.Environment.IsDevelopment())
 {

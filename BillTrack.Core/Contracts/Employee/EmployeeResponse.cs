@@ -5,5 +5,6 @@ public record EmployeeResponse(
     string Email,
     string Firstname,
     string Lastname,
+    decimal Salary,
     Guid DepartmentId,
     Guid ProjectId);

@@ -4,6 +4,7 @@ using Amazon.Lambda.SQSEvents;
 using Amazon.S3;
 using BillTrack.Core.Contracts.SqsMessages;
 using BillTrack.Core.Interfaces.Services;
+using BillTrack.Core.Models;
 using BillTrack.Worker.Configurations;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -75,11 +76,7 @@ public class Function
             .AddEnvironmentVariables()
             .Build();
 
-        services.Configure<AwsSettings>(config =>
-        {
-            config.AwsRegion = configuration["AWS_REGION"];
-            config.BucketName = configuration["BUCKET_NAME"];
-        });
+        services.Configure<AwsSettings>(configuration.GetSection(AwsSettings.SectionName));
 
         Log.Logger = new LoggerConfiguration()
             .ReadFrom.Configuration(configuration)
