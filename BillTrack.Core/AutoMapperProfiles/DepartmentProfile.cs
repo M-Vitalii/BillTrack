@@ -11,6 +11,8 @@ public class DepartmentProfile : Profile
         CreateMap<DepartmentRequest, Department>()
             .ForMember(o => o.Id, opt => opt.Ignore());
 
+        CreateMap<DepartmentUpdateRequest, Department>();
+
         CreateMap<Department, DepartmentResponse>();
     }
 }

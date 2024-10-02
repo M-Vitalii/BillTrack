@@ -7,7 +7,7 @@ using IMapper = AutoMapper.IMapper;
 
 namespace BillTrack.Api.Features.Employees.Endpoints;
 
-public class UpdateEmployee : Endpoint<EmployeeRequest>
+public class UpdateEmployee : Endpoint<EmployeeUpdateRequest>
 {
     private readonly IMapper _mapper;
     private readonly IWebApiService _webApiService;
@@ -23,7 +23,7 @@ public class UpdateEmployee : Endpoint<EmployeeRequest>
         Put("employees/{id}");
     }
     
-    public override async Task HandleAsync(EmployeeRequest r, CancellationToken c)
+    public override async Task HandleAsync(EmployeeUpdateRequest r, CancellationToken c)
     {
         await _webApiService.UpdateAsync(Route<Guid>("id"), _mapper.Map<Employee>(r));
         

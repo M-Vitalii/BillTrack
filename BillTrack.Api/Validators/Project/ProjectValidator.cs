@@ -1,7 +1,7 @@
 using BillTrack.Core.Contracts.Project;
 using FastEndpoints;
 
-namespace BillTrack.Api.Validators;
+namespace BillTrack.Api.Validators.Project;
 
 public class ProjectValidator : Validator<ProjectRequest>
 {

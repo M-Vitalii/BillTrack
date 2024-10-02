@@ -1,7 +1,7 @@
 using BillTrack.Core.Contracts.Department;
 using FastEndpoints;
 
-namespace BillTrack.Api.Validators;
+namespace BillTrack.Api.Validators.Department;
 
 public class DepartmentValidator : Validator<DepartmentRequest>
 {

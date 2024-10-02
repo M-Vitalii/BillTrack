@@ -1,7 +1,7 @@
 using BillTrack.Core.Contracts.Employee;
 using FastEndpoints;
 
-namespace BillTrack.Api.Validators;
+namespace BillTrack.Api.Validators.Employee;
 
 public class EmployeeValidator : Validator<EmployeeRequest>
 {

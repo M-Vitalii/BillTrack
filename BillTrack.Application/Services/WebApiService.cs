@@ -1,9 +1,16 @@
+using System.Text.Json;
+using Amazon.SQS;
+using Amazon.SQS.Model;
 using BillTrack.Core.Exceptions;
+using BillTrack.Core.Interfaces.Models;
 using BillTrack.Core.Interfaces.Repositories;
 using BillTrack.Core.Interfaces.Services;
 using BillTrack.Core.Models;
+using BillTrack.Core.Models.WebApi;
 using BillTrack.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace BillTrack.Application.Services;
@@ -11,10 +18,12 @@ namespace BillTrack.Application.Services;
 public class WebApiService : IWebApiService
 {
     private IServiceScope _scope;
-
-    public WebApiService(IServiceScopeFactory serviceScopeFactory)
+    private readonly ISqsPublisher _sqsPublisher;
+    
+    public WebApiService(IServiceScopeFactory serviceScopeFactory, ISqsPublisher sqsPublisher)
     {
         _scope = serviceScopeFactory.CreateScope();
+        _sqsPublisher = sqsPublisher;
     }
     
     private IGenericRepository<T> GetRepository<T>() where T : AuditableEntity
@@ -71,5 +80,10 @@ public class WebApiService : IWebApiService
         }
 
         return entity;
+    }
+    
+    public async Task PublishSqsMessageAsync<T>(string queueName, T message) where T : IMessage
+    {
+        await _sqsPublisher.PublishMessageAsync(queueName, message);
     }
 }

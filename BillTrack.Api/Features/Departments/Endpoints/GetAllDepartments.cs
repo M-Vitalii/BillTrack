@@ -3,6 +3,7 @@ using BillTrack.Core.Contracts;
 using BillTrack.Core.Contracts.Department;
 using BillTrack.Core.Interfaces.Services;
 using BillTrack.Core.Models;
+using BillTrack.Core.Models.WebApi;
 using BillTrack.Domain.Entities;
 using FastEndpoints;
 using IMapper = AutoMapper.IMapper;

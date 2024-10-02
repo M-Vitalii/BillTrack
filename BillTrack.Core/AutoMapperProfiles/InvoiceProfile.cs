@@ -11,6 +11,8 @@ public class InvoiceProfile : Profile
         CreateMap<InvoiceRequest, Invoice>()
             .ForMember(o => o.Id, opt => opt.Ignore());
 
+        CreateMap<InvoiceUpdateRequest, Invoice>();
+
         CreateMap<Invoice, InvoiceResponse>();
     }
 }

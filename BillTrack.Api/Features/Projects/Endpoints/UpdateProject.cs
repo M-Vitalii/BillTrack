@@ -8,7 +8,7 @@ using IMapper = AutoMapper.IMapper;
 
 namespace BillTrack.Api.Features.Projects.Endpoints;
 
-public class UpdateProject : Endpoint<ProjectRequest>
+public class UpdateProject : Endpoint<ProjectUpdateRequest>
 {
     private readonly IMapper _mapper;
     private readonly IWebApiService _webApiService;
@@ -24,7 +24,7 @@ public class UpdateProject : Endpoint<ProjectRequest>
         Put("projects/{id}");
     }
     
-    public override async Task HandleAsync(ProjectRequest r, CancellationToken c)
+    public override async Task HandleAsync(ProjectUpdateRequest r, CancellationToken c)
     {
         await _webApiService.UpdateAsync(Route<Guid>("id"), _mapper.Map<Project>(r));
         
