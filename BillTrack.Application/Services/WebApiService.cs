@@ -1,16 +1,11 @@
-using System.Text.Json;
-using Amazon.SQS;
-using Amazon.SQS.Model;
+using System.Linq.Expressions;
 using BillTrack.Core.Exceptions;
 using BillTrack.Core.Interfaces.Models;
 using BillTrack.Core.Interfaces.Repositories;
 using BillTrack.Core.Interfaces.Services;
-using BillTrack.Core.Models;
 using BillTrack.Core.Models.WebApi;
 using BillTrack.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Caching.Memory;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace BillTrack.Application.Services;
@@ -41,9 +36,9 @@ public class WebApiService : IWebApiService
         return await GetByIdAsyncOrThrow(GetRepository<T>(), id);
     }
 
-    public async Task<PagedResult<T>> GetAllPagedAsync<T>(int pageNumber, int pageSize) where T : AuditableEntity
+    public async Task<PagedResult<T>> GetAllPagedAsync<T>(int pageNumber, int pageSize, params Expression<Func<T, object>>[]? includeProperties) where T : AuditableEntity
     {
-        var items = await GetRepository<T>().GetAllAsync()
+        var items = await GetRepository<T>().GetAllAsync(includeProperties)
             .Skip((pageNumber - 1) * pageSize)
             .Take(pageSize)
             .ToListAsync();

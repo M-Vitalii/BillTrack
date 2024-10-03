@@ -15,8 +15,19 @@ public class GenericRepository<TEntity> : IGenericRepository<TEntity> where TEnt
     }
 
     public ValueTask<TEntity?> GetByIdAsync(Guid id) => _dbContext.Set<TEntity>().FindAsync(id);
+    
+    public IQueryable<TEntity> GetAllAsync(params Expression<Func<TEntity, object>>[]? includeProperties)
+    {
+        IQueryable<TEntity> query = _dbContext.Set<TEntity>().AsNoTracking();
 
-    public IQueryable<TEntity> GetAllAsync() => _dbContext.Set<TEntity>().AsNoTracking();
+        if (includeProperties != null)
+        {
+            query = includeProperties.Aggregate(query,
+                (current, includeProperty) => current.Include(includeProperty));
+        }
+
+        return query;
+    }
 
     public async Task<TEntity> AddAsync(TEntity entity)
     {

@@ -14,17 +14,26 @@ public class EmployeeSalaryCalculator : IEmployeeSalaryCalculator
     {
         _employeeRepository = employeeRepository;
     }
-    
+
     public async Task<EmployeeWorkSummary> CalculateEmployeeSalaryAsync(Invoice invoice)
     {
         var firstDayOfMonth = new DateOnly(invoice.Year, invoice.Month, 1);
         var lastDayOfMonth = firstDayOfMonth.AddMonths(1).AddDays(-1);
 
+        var employee = await GetEmployeeAsync(invoice.EmployeeId);
         var weekdaysInMonth = GetWeekdaysInMonth(firstDayOfMonth, lastDayOfMonth);
 
-        var defaultWorkHours = weekdaysInMonth * 8;
+        var totalHoursWorked = CalculateWorkHours(employee, firstDayOfMonth, lastDayOfMonth);
+        var hourlyRate = CalculateHourlyRate(employee.Salary, weekdaysInMonth);
 
-        var employee = await _employeeRepository.GetByIdAsync(invoice.EmployeeId,
+        var calculatedSalary = CalculateSalary(hourlyRate, totalHoursWorked);
+
+        return CreateEmployeeWorkSummary(employee, totalHoursWorked, hourlyRate, calculatedSalary);
+    }
+
+    private async Task<Employee> GetEmployeeAsync(Guid employeeId)
+    {
+        var employee = await _employeeRepository.GetByIdAsync(employeeId,
             e => e.Department,
             e => e.Project,
             e => e.Workdays);
@@ -34,16 +43,30 @@ public class EmployeeSalaryCalculator : IEmployeeSalaryCalculator
             throw new NotFoundException("Employee not found.");
         }
 
-        var totalHoursWorked = employee.Workdays
+        return employee;
+    }
+
+    private decimal CalculateHourlyRate(decimal salary, int weekdaysInMonth)
+    {
+        var defaultWorkHours = weekdaysInMonth * 8;
+        return salary / defaultWorkHours;
+    }
+
+    private decimal CalculateWorkHours(Employee employee, DateOnly firstDayOfMonth, DateOnly lastDayOfMonth)
+    {
+        return employee.Workdays
             .Where(w => w.Date >= firstDayOfMonth && w.Date <= lastDayOfMonth)
             .Sum(w => w.Hours);
+    }
 
-        var hourlyRate = employee.Salary / defaultWorkHours;
-
+    private decimal CalculateSalary(decimal hourlyRate, decimal totalHoursWorked)
+    {
         var calculatedSalary = hourlyRate * totalHoursWorked;
-        calculatedSalary = Math.Round(calculatedSalary, 2, MidpointRounding.AwayFromZero);
+        return Math.Round(calculatedSalary, 2, MidpointRounding.AwayFromZero);
+    }
 
-
+    private EmployeeWorkSummary CreateEmployeeWorkSummary(Employee employee, decimal totalHoursWorked, decimal hourlyRate, decimal calculatedSalary)
+    {
         return new EmployeeWorkSummary
         {
             Email = employee.Email,

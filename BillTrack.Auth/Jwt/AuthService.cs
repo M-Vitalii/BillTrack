@@ -15,15 +15,18 @@ public class AuthService : IAuthService
     private readonly IGenericRepository<User> _userRepository;
     private readonly IConfiguration _configuration;
     private readonly IPasswordHasher _passwordHasher;
+    private readonly IJwtTokenCreator _jwtTokenCreator;
 
     public AuthService(
         IGenericRepository<User> userRepository, 
         IConfiguration configuration,
-        IPasswordHasher passwordHasher)
+        IPasswordHasher passwordHasher, 
+        IJwtTokenCreator jwtTokenCreator)
     {
         _userRepository = userRepository;
         _configuration = configuration;
         _passwordHasher = passwordHasher;
+        _jwtTokenCreator = jwtTokenCreator;
     }
 
     public async Task<string> GenerateToken(string username, string password)
@@ -50,12 +53,6 @@ public class AuthService : IAuthService
         var signingKey = _configuration["JwtSecretKey"] ??
                          throw new InvalidOperationException("JWT Secret Key is missing.");
 
-        return JwtBearer.CreateToken(
-            o =>
-            {
-                o.SigningKey = signingKey;
-                o.User.Claims.Add(new Claim(JwtRegisteredClaimNames.Sub, userId.ToString()));
-                o.ExpireAt = DateTime.UtcNow.AddDays(1);
-            });
+        return _jwtTokenCreator.CreateToken(userId, signingKey);
     }
 }

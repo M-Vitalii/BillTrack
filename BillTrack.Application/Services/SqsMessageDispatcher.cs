@@ -1,5 +1,6 @@
 using System.Text.Json;
 using BillTrack.Core.Contracts.SqsMessages;
+using BillTrack.Core.Exceptions;
 using BillTrack.Core.Interfaces.Models;
 using BillTrack.Core.Interfaces.Services;
 
@@ -16,16 +17,17 @@ public class SqsMessageDispatcher : ISqsMessageDispatcher
 
     public async Task DispatchMessage<T>(string messageBody) where T : IMessage
     {
-        var message = JsonSerializer.Deserialize<T>(messageBody);
-
-        if (message == null)
+        try
         {
-            throw new ArgumentNullException("Failed to deserialize message");
+            var message = JsonSerializer.Deserialize<T>(messageBody);
+            await ProcessMessage(message);
         }
-        
-        await ProcessMessage(message);
+        catch (Exception exception)
+        {
+            throw new JsonGeneralException("Failed to deserialize message", exception);
+        }
     }
-    
+
     private async Task ProcessMessage<T>(T message) where T : IMessage
     {
         switch (message)
