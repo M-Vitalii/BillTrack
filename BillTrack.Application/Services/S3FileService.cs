@@ -1,16 +1,14 @@
 using Amazon.S3;
 using Amazon.S3.Model;
-using BillTrack.Core.Interfaces.Repositories;
 using BillTrack.Core.Interfaces.Services;
-using BillTrack.Domain.Entities;
 
-namespace BillTrack.Worker.Services;
+namespace BillTrack.Application.Services;
 
-public class S3FileUploader : IS3FileUploader
+public class S3FileService : IS3FileService
 {
     private readonly IAmazonS3 _s3Client;
-    
-    public S3FileUploader(IAmazonS3 s3Client)
+
+    public S3FileService(IAmazonS3 s3Client)
     {
         _s3Client = s3Client;
     }
@@ -26,5 +24,17 @@ public class S3FileUploader : IS3FileUploader
         };
 
         await _s3Client.PutObjectAsync(request);
+    }
+
+    public async Task<string> GetPresignedUrl(string bucketName, string objectKey)
+    {
+        var request = new GetPreSignedUrlRequest
+        {
+            BucketName = bucketName,
+            Key = objectKey,
+            Expires = DateTime.UtcNow.AddMinutes(15)
+        };
+
+        return await _s3Client.GetPreSignedURLAsync(request);
     }
 }

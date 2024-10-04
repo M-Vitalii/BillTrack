@@ -13,6 +13,7 @@ public static class ServicesConfiguration
         services.AddScoped<IWebApiService, WebApiService>();
         services.AddScoped<IAuthService, AuthService>();
         services.AddScoped<ISqsPublisher, SqsPublisher>();
+        services.AddScoped<IS3FileService, S3FileService>();
 
         services.AddScoped<IPasswordHasher, PasswordHasher>();
 

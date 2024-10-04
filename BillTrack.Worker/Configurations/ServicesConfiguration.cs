@@ -13,7 +13,7 @@ public static class ServicesConfiguration
     {
         services.AddTransient<IEmployeeSalaryCalculator, EmployeeSalaryCalculator>();
         services.AddTransient<IPdfGenerator, InvoicePdfGenerator>();
-        services.AddTransient<IS3FileUploader, S3FileUploader>();
+        services.AddTransient<IS3FileService, S3FileService>();
 
         services.AddTransient<ISqsMessageDispatcher, SqsMessageDispatcher>();
         
