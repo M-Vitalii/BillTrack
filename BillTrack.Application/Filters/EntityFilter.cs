@@ -49,14 +49,14 @@ public static class EntityFilter
     public static Expression<Func<Department, bool>> BuildDepartmentFilter(string? name)
     {
         return BuildFilter<Department>(
-            (!string.IsNullOrEmpty(name), d => d.Name == name)
+            (!string.IsNullOrEmpty(name), d => d.Name.Contains(name))
         );
     }
     
     public static Expression<Func<Project, bool>> BuildProjectFilter(string? name)
     {
         return BuildFilter<Project>(
-            (!string.IsNullOrEmpty(name), p => p.Name == name)
+            (!string.IsNullOrEmpty(name), p => p.Name.Contains(name))
         );
     }
     

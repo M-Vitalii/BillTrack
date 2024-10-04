@@ -24,4 +24,10 @@ public interface IWebApiService
 
     Task<PagedResult<Workday>> GetAllWorkdaysPagedAsync(int pageNumber, int pageSize,
         string? sortByDate, DateOnly? filterByDate, Guid? filterByEmployee);
+    
+    Task<PagedResult<Department>> GetAllDepartmentsPagedAsync(int pageNumber, int pageSize, string? sortByName, string? filterByName);
+    Task<PagedResult<Employee>> GetAllEmployeesPagedAsync(int pageNumber, int pageSize, string? sortByName, string? filterByFirstName, string? filterByLastName, Guid? filterByDepartment, Guid? filterByProject);
+    Task<PagedResult<Invoice>> GetAllInvoicesPagedAsync(int pageNumber, int pageSize, string? sortByDate, Guid? filterByEmployee, int? filterByMonth, int? filterByYear);
+    Task<PagedResult<Project>> GetAllProjectsPagedAsync(int pageNumber, int pageSize, string? sortByName, string? filterByName);
+
 }
