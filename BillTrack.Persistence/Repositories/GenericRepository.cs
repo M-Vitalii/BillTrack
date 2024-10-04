@@ -1,5 +1,6 @@
 using System.Linq.Expressions;
 using BillTrack.Core.Interfaces.Repositories;
+using BillTrack.Core.Models;
 using BillTrack.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
@@ -16,14 +17,20 @@ public class GenericRepository<TEntity> : IGenericRepository<TEntity> where TEnt
 
     public ValueTask<TEntity?> GetByIdAsync(Guid id) => _dbContext.Set<TEntity>().FindAsync(id);
     
-    public IQueryable<TEntity> GetAllAsync(params Expression<Func<TEntity, object>>[]? includeProperties)
+    public IQueryable<TEntity> GetAllAsync(
+        Expression<Func<TEntity, bool>>? filter = null,
+        Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>>? orderBy = null)
     {
         IQueryable<TEntity> query = _dbContext.Set<TEntity>().AsNoTracking();
 
-        if (includeProperties != null)
+        if (filter != null)
         {
-            query = includeProperties.Aggregate(query,
-                (current, includeProperty) => current.Include(includeProperty));
+            query = query.Where(filter);
+        }
+
+        if (orderBy != null)
+        {
+            query = orderBy(query);
         }
 
         return query;

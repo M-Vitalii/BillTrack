@@ -11,9 +11,17 @@ public interface IWebApiService
     Task<T> CreateAsync<T>(T entity) where T : AuditableEntity;
     Task<T> GetByIdAsync<T>(Guid id) where T : AuditableEntity;
 
-    Task<PagedResult<T>> GetAllPagedAsync<T>(int pageNumber, int pageSize,
-        params Expression<Func<T, object>>[]? includeProperties) where T : AuditableEntity;
+    Task<PagedResult<T>> GetAllPagedAsync<T>(
+        int pageNumber,
+        int pageSize,
+        Expression<Func<T, bool>>? filter = null,
+        Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null,
+        string? sortDirection = SortDirection.Asc) where T : AuditableEntity;
+    
     Task UpdateAsync<T>(Guid id, T entity) where T : AuditableEntity;
     Task DeleteAsync<T>(Guid id) where T : AuditableEntity;
     Task PublishSqsMessageAsync<T>(string queueName, T message) where T : IMessage;
+
+    Task<PagedResult<Workday>> GetAllWorkdaysPagedAsync(int pageNumber, int pageSize,
+        string? sortByDate, DateOnly? filterByDate, Guid? filterByEmployee);
 }

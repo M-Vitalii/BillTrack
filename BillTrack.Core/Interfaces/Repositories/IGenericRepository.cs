@@ -1,4 +1,5 @@
 using System.Linq.Expressions;
+using BillTrack.Core.Models;
 using BillTrack.Domain.Entities;
 
 namespace BillTrack.Core.Interfaces.Repositories;
@@ -7,7 +8,10 @@ public interface IGenericRepository<TEntity> where TEntity : AuditableEntity
 {
     ValueTask<TEntity?> GetByIdAsync(Guid id);
     Task<TEntity?> GetByIdAsync(Guid id, params Expression<Func<TEntity, object>>[] includes);
-    IQueryable<TEntity> GetAllAsync(params Expression<Func<TEntity, object>>[]? includeProperties);
+
+    IQueryable<TEntity> GetAllAsync(
+        Expression<Func<TEntity, bool>>? filter = null,
+        Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>>? orderBy = null);
     Task<TEntity> AddAsync(TEntity entity);
     Task UpdateAsync(TEntity entity);
     Task DeleteAsync(TEntity entity);
