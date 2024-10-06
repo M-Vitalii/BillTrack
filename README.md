@@ -4,7 +4,7 @@ This is an educational ASP.NET Core 8.0 REST API project built using FastEndpoin
 # Technologies
 - ASP.NET Core 8.0: The framework for building the web application.
 - Entity Framework Core (PostgreSQL): The ORM for database interactions.
-- NUnit: The testing framework.
+- xUnit: The testing framework.
 - Docker: For containerization.
 - Pub/Sub provider (AWS SQS): For message queuing.
 - Fluent Validation: For validation.
