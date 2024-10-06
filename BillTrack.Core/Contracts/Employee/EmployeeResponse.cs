@@ -1,3 +1,6 @@
+using BillTrack.Core.Contracts.Department;
+using BillTrack.Core.Contracts.Project;
+
 namespace BillTrack.Core.Contracts.Employee;
 
 public record EmployeeResponse(
@@ -6,5 +9,5 @@ public record EmployeeResponse(
     string Firstname,
     string Lastname,
     decimal Salary,
-    Guid DepartmentId,
-    Guid ProjectId);
+    DepartmentResponse Department,
+    ProjectResponse Project);

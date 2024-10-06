@@ -20,7 +20,7 @@ public class GetByIdEmployee : EndpointWithoutRequest<EmployeeResponse>
     
     public override void Configure()
     {
-        Get("employee/{id}");
+        Get("employees/{id}");
     }
     
     public override async Task HandleAsync(CancellationToken c)
