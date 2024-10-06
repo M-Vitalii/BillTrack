@@ -1,3 +1,5 @@
+using BillTrack.Core.Contracts.Employee;
+
 namespace BillTrack.Core.Contracts.Workday;
 
-public record WorkdayResponse(Guid Id, DateOnly Date, decimal Hours, Guid EmployeeId);
+public record WorkdayResponse(Guid Id, DateOnly Date, decimal Hours, EmployeeResponse Employee);

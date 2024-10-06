@@ -19,13 +19,19 @@ public class GenericRepository<TEntity> : IGenericRepository<TEntity> where TEnt
     
     public IQueryable<TEntity> GetAllAsync(
         Expression<Func<TEntity, bool>>? filter = null,
-        Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>>? orderBy = null)
+        Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>>? orderBy = null,
+        params Expression<Func<TEntity, object>>[]? includes)
     {
         IQueryable<TEntity> query = _dbContext.Set<TEntity>().AsNoTracking();
 
         if (filter != null)
         {
             query = query.Where(filter);
+        }
+
+        if (includes != null)
+        {
+            query = includes.Aggregate(query, (current, include) => current.Include(include));
         }
 
         if (orderBy != null)

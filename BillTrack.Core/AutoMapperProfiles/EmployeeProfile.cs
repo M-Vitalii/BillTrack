@@ -12,8 +12,11 @@ public class EmployeeProfile : Profile
         CreateMap<EmployeeRequest, Employee>()
             .ForMember(o => o.Id, opt => opt.Ignore());
 
-        CreateMap<EmployeeUpdateRequest, Employee>();
+        CreateMap<Employee, EmployeeResponse>()
+            .ForMember(dest => dest.Department, opt => opt.MapFrom(src => src.Department))
+            .ForMember(dest => dest.Project, opt => opt.MapFrom(src => src.Project));
         
+        CreateMap<EmployeeUpdateRequest, Employee>();
         CreateMap<Employee, EmployeeResponse>();
     }
 }

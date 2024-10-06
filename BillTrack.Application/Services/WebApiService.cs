@@ -43,9 +43,10 @@ public class WebApiService : IWebApiService
         int pageSize,
         Expression<Func<T, bool>>? filter = null,
         Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null,
+        Expression<Func<T, object>>[]? includes = null,
         string? sortDirection = SortDirection.Asc) where T : AuditableEntity
     {
-        var items = await GetRepository<T>().GetAllAsync(filter, orderBy)
+        var items = await GetRepository<T>().GetAllAsync(filter, orderBy, includes)
             .Skip((pageNumber - 1) * pageSize)
             .Take(pageSize)
             .ToListAsync();
@@ -99,23 +100,30 @@ public class WebApiService : IWebApiService
         var filter = EntityFilter.BuildWorkdayFilter(filterByDate, filterByEmployee);
         var orderBy = CreateOrderByFunc<Workday, DateOnly>(sortByDate, w => w.Date);
 
-        return GetAllPagedAsync(pageNumber, pageSize, filter, orderBy);
+        Expression<Func<Workday, object>>[] includes = { w => w.Employee }; 
+        
+        return GetAllPagedAsync(pageNumber, pageSize, filter, orderBy, includes);
     }
 
     public Task<PagedResult<Employee>> GetAllEmployeesPagedAsync(
         int pageNumber,
         int pageSize,
         string? sortByName,
-        string? filterByFirstName,
-        string? filterByLastName,
+        string? filterByFullname,
         Guid? filterByDepartment,
         Guid? filterByProject)
     {
         var filter =
-            EntityFilter.BuildEmployeeFilter(filterByFirstName, filterByLastName, filterByDepartment, filterByProject);
+            EntityFilter.BuildEmployeeFilter(filterByFullname, filterByDepartment, filterByProject);
         var orderBy = CreateOrderByFunc<Employee, string>(sortByName, e => e.Lastname);
 
-        return GetAllPagedAsync(pageNumber, pageSize, filter, orderBy);
+        Expression<Func<Employee, object>>[] includes = 
+        { 
+            e => e.Department, 
+            e => e.Project
+        };
+        
+        return GetAllPagedAsync(pageNumber, pageSize, filter, orderBy, includes);
     }
 
     public Task<PagedResult<Department>> GetAllDepartmentsPagedAsync(
@@ -152,8 +160,10 @@ public class WebApiService : IWebApiService
     {
         var filter = EntityFilter.BuildInvoiceFilter(filterByEmployee, filterByMonth, filterByYear);
         var orderBy = CreateOrderByFunc<Invoice, int>(sortByDate, i => i.Year * 100 + i.Month);
+        
+        Expression<Func<Invoice, object>>[] includes = { i => i.Employee }; 
 
-        return GetAllPagedAsync(pageNumber, pageSize, filter, orderBy);
+        return GetAllPagedAsync(pageNumber, pageSize, filter, orderBy, includes);
     }
 
     private Func<IQueryable<T>, IOrderedQueryable<T>>? CreateOrderByFunc<T, TKey>(

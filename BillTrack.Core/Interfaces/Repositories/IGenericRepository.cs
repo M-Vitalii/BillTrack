@@ -11,7 +11,8 @@ public interface IGenericRepository<TEntity> where TEntity : AuditableEntity
 
     IQueryable<TEntity> GetAllAsync(
         Expression<Func<TEntity, bool>>? filter = null,
-        Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>>? orderBy = null);
+        Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>>? orderBy = null,
+        params Expression<Func<TEntity, object>>[]? includes);
     Task<TEntity> AddAsync(TEntity entity);
     Task UpdateAsync(TEntity entity);
     Task DeleteAsync(TEntity entity);

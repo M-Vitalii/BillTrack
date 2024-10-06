@@ -16,6 +16,7 @@ public interface IWebApiService
         int pageSize,
         Expression<Func<T, bool>>? filter = null,
         Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null,
+        Expression<Func<T, object>>[]? includes = null,
         string? sortDirection = SortDirection.Asc) where T : AuditableEntity;
     
     Task UpdateAsync<T>(Guid id, T entity) where T : AuditableEntity;
@@ -26,7 +27,14 @@ public interface IWebApiService
         string? sortByDate, DateOnly? filterByDate, Guid? filterByEmployee);
     
     Task<PagedResult<Department>> GetAllDepartmentsPagedAsync(int pageNumber, int pageSize, string? sortByName, string? filterByName);
-    Task<PagedResult<Employee>> GetAllEmployeesPagedAsync(int pageNumber, int pageSize, string? sortByName, string? filterByFirstName, string? filterByLastName, Guid? filterByDepartment, Guid? filterByProject);
+
+    Task<PagedResult<Employee>> GetAllEmployeesPagedAsync(
+        int pageNumber,
+        int pageSize,
+        string? sortByName,
+        string? filterByFullname,
+        Guid? filterByDepartment,
+        Guid? filterByProject);
     Task<PagedResult<Invoice>> GetAllInvoicesPagedAsync(int pageNumber, int pageSize, string? sortByDate, Guid? filterByEmployee, int? filterByMonth, int? filterByYear);
     Task<PagedResult<Project>> GetAllProjectsPagedAsync(int pageNumber, int pageSize, string? sortByName, string? filterByName);
 

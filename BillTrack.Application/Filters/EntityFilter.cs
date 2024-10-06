@@ -2,6 +2,7 @@ using System;
 using System.Linq.Expressions;
 using BillTrack.Application.Helpers;
 using BillTrack.Domain.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace BillTrack.Application.Filters;
 
@@ -33,14 +34,14 @@ public static class EntityFilter
     }
 
     public static Expression<Func<Employee, bool>> BuildEmployeeFilter(
-        string? firstName, 
-        string? lastName,
+        string? employeeName, 
         Guid? departmentId, 
         Guid? projectId)
     {
         return BuildFilter<Employee>(
-            (!string.IsNullOrEmpty(firstName), e => e.Firstname.Contains(firstName)),
-            (!string.IsNullOrEmpty(lastName), e => e.Lastname.Contains(lastName)),
+            (!string.IsNullOrEmpty(employeeName), e => 
+                EF.Functions.ILike(e.Firstname, $"%{employeeName}%") || 
+                EF.Functions.ILike(e.Lastname, $"%{employeeName}%")),
             (departmentId.HasValue, e => e.DepartmentId == departmentId.Value),
             (projectId.HasValue, e => e.ProjectId == projectId.Value)
         );

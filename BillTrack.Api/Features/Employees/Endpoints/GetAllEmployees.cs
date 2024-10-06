@@ -26,7 +26,7 @@ public class GetAllEmployees : Endpoint<EmployeeQueryParamsRequest, PagedResult<
     public override async Task HandleAsync(EmployeeQueryParamsRequest r, CancellationToken c)
     {
         var entities = await _webApiService.GetAllEmployeesPagedAsync(
-            r.Page, r.PageSize, r.SortByName, r.FilterByFirstName, r.FilterByLastName,
+            r.Page, r.PageSize, r.SortByName, r.FilterByEmployeeName,
             r.FilterByDepartment, r.FilterByProject);
             
         Response = new PagedResult<EmployeeResponse>
