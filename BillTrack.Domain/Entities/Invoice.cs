@@ -6,5 +6,7 @@ public class Invoice : AuditableEntity
     public int Year { get; set; }
     public Guid EmployeeId { get; set; }
 
+    public string InvoiceUrl { get; set; } = "";
+
     public required Employee Employee { get; set; }
 }

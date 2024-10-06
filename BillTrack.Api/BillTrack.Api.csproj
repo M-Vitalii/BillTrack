@@ -7,7 +7,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Amazon.Lambda.AspNetCoreServer.Hosting" Version="1.7.1" />
+    <PackageReference Include="AWSSDK.Extensions.NETCore.Setup" Version="3.7.301" />
+    <PackageReference Include="AWSSDK.S3" Version="3.7.403.5" />
+    <PackageReference Include="AWSSDK.SQS" Version="3.7.400.17" />
     <PackageReference Include="FastEndpoints" Version="5.28.0" />
+    <PackageReference Include="FastEndpoints.Security" Version="5.28.0" />
+    <PackageReference Include="FastEndpoints.Swagger" Version="5.28.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.7">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -15,6 +21,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\BillTrack.Application\BillTrack.Application.csproj" />
+    <ProjectReference Include="..\BillTrack.Auth\BillTrack.Auth.csproj" />
     <ProjectReference Include="..\BillTrack.Domain\BillTrack.Domain.csproj" />
     <ProjectReference Include="..\BillTrack.Persistence\BillTrack.Persistence.csproj" />
   </ItemGroup>

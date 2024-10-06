@@ -1,0 +1,18 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <PackageReference Include="FastEndpoints.Security" Version="5.28.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\BillTrack.Core\BillTrack.Core.csproj" />
+      <ProjectReference Include="..\BillTrack.Persistence\BillTrack.Persistence.csproj" />
+    </ItemGroup>
+
+</Project>
