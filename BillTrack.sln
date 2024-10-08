@@ -19,6 +19,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BillTrack.Worker", "BillTra
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BillTrack.Tests", "BillTrack.Tests\BillTrack.Tests.csproj", "{F025BF51-4EA4-4727-A471-5E93276194F2}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BillTrack.Emailer", "BillTrack.Emailer\BillTrack.Emailer.csproj", "{BAD2343E-DFA2-4A94-9A25-E8CCE9ACEADC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -57,6 +59,10 @@ Global
 		{F025BF51-4EA4-4727-A471-5E93276194F2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F025BF51-4EA4-4727-A471-5E93276194F2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F025BF51-4EA4-4727-A471-5E93276194F2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BAD2343E-DFA2-4A94-9A25-E8CCE9ACEADC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BAD2343E-DFA2-4A94-9A25-E8CCE9ACEADC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BAD2343E-DFA2-4A94-9A25-E8CCE9ACEADC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BAD2343E-DFA2-4A94-9A25-E8CCE9ACEADC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

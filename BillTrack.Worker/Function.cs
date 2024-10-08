@@ -1,7 +1,9 @@
+using System.Text.Json;
 using Amazon.Lambda.Core;
 using Amazon.Lambda.Serialization.SystemTextJson;
 using Amazon.Lambda.SQSEvents;
 using Amazon.S3;
+using Amazon.SQS;
 using BillTrack.Core.Contracts.SqsMessages;
 using BillTrack.Core.Interfaces.Services;
 using BillTrack.Core.Models;
@@ -20,7 +22,7 @@ namespace BillTrack.Worker;
 
 public class Function
 {
-    private readonly Dictionary<string, Func<string, Task>> _handlers;
+    private readonly IMessageProcessor _messageProcessor;
     
     public Function()
     {
@@ -28,44 +30,16 @@ public class Function
         ConfigureServices(serviceCollection);
         var serviceProvider = serviceCollection.BuildServiceProvider();
 
-        var sqsMessageDispatcher = serviceProvider.GetRequiredService<ISqsMessageDispatcher>();
-        
-        _handlers = new Dictionary<string, Func<string, Task>>
-        {
-            { nameof(CreatedInvoice), sqsMessageDispatcher.DispatchMessage<CreatedInvoice> },
-        };
+        _messageProcessor = serviceProvider.GetRequiredService<IMessageProcessor>();
     }
 
     public async Task FunctionHandler(SQSEvent evnt)
     {
         foreach (var message in evnt.Records)
         {
-            using (LogContext.PushProperty("SqsMessage", message))
-            {
-                var messageAttributes = message.MessageAttributes;
-                if (messageAttributes != null && messageAttributes.TryGetValue("MessageType", out var attribute))
-                {
-                    var messageType = attribute.StringValue;
-
-                    await ProcessMessageBasedOnType(messageType, message.Body);
-                }
-                else
-                {
-                    throw new InvalidOperationException("Message type attribute is missing");
-                }
-            }
+            var messageType = message.MessageAttributes["MessageType"].StringValue;
+            await _messageProcessor.ProcessMessage(messageType, message.Body);
         }
-    }
-    
-    
-    private Task ProcessMessageBasedOnType(string messageType, string messageBody)
-    {
-        if (_handlers.TryGetValue(messageType, out var handler))
-        {
-            return handler(messageBody);
-        }
-
-        throw new InvalidOperationException($"No handler found for message type: {messageType}");
     }
 
     private void ConfigureServices(IServiceCollection services)
@@ -90,5 +64,6 @@ public class Function
             .ConfigureServices();
 
         services.AddAWSService<IAmazonS3>();
+        services.AddAWSService<IAmazonSQS>();
     }
 }
