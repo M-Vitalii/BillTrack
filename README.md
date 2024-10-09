@@ -32,15 +32,19 @@ This study project explores AWS Cloud services, implementing a serverless archit
 - Amazon S3: Used for storing generated PDF files, showcasing cloud storage capabilities.
 - Worker SQS Queue: Implements asynchronous task distribution, illustrating message queuing.
 - Worker Lambda: Triggered by SQS messages, demonstrating background processing in serverless environments.
+- Emailer SQS Queue: Implements asynchronous communication between Worker Lambda and Emailer Lambda.
+- Emailer Lambda: Sends generated invoices as email attachments to employees.
 - RDS Postgres Database: Exemplifies relational database usage in cloud architectures.
 
 ### Data Flow
-
 1. The frontend sends a request to the Web API Lambda.
 2. Web API Lambda writes data to the RDS Postgres database.
 3. Web API Lambda sends an invoice_id message to the Worker SQS Queue.
 4. The Worker SQS Queue triggers the Worker Lambda.
-5. Worker Lambda generates a PDF and uploads to S3. 
-6. Worker Lambda updates the invoiceUrl field and saves changes to database.
-7. Web API Lambda requests a pre-signed URL from S3 for the invoice to be generated.
-8. S3 returns the pre-signed URL to the Web API Lambda.
+5. Worker Lambda generates a PDF and uploads it to S3.
+6. Worker Lambda updates the invoiceUrl field and saves changes to the database.
+7. Worker Lambda sends a message with the generated_invoice_id to the Emailer SQS Queue.
+8. The Emailer SQS Queue triggers the Emailer Lambda.
+9. Emailer Lambda retrieves the generated invoice from S3 and sends it to the employee's email.
+10. Web API Lambda requests a pre-signed URL from S3 for the generated invoice.
+11. S3 returns the pre-signed URL to the Web API Lambda.
