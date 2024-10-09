@@ -40,7 +40,7 @@ public class EmployeeSalaryCalculator : IEmployeeSalaryCalculator
 
         if (employee == null)
         {
-            throw new NotFoundException("Employee not found.");
+            throw new NotFoundException(employeeId);
         }
 
         return employee;

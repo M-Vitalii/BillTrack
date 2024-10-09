@@ -26,15 +26,28 @@ public class S3FileService : IS3FileService
         await _s3Client.PutObjectAsync(request);
     }
 
-    public async Task<string> GetPresignedUrl(string bucketName, string objectKey)
+    public async Task<string?> GetPresignedUrl(string bucketName, string objectKey, double expireMinutes = 15)
     {
         var request = new GetPreSignedUrlRequest
         {
             BucketName = bucketName,
             Key = objectKey,
-            Expires = DateTime.UtcNow.AddMinutes(15)
+            Expires = DateTime.UtcNow.AddMinutes(expireMinutes)
         };
 
         return await _s3Client.GetPreSignedURLAsync(request);
+    }
+
+    public async Task<Stream> GetObjectAsync(string bucketName, string objectKey)
+    {
+        var request = new GetObjectRequest
+        {
+            BucketName = bucketName,
+            Key = objectKey
+        };
+
+        var response = await _s3Client.GetObjectAsync(request);
+
+        return response.ResponseStream;
     }
 }

@@ -1,6 +1,7 @@
 global using FluentValidation;
 using Amazon.S3;
 using Amazon.SQS;
+using BillTrack.Api;
 using BillTrack.Api.Configurations;
 using FastEndpoints;
 using FastEndpoints.Security;
@@ -23,6 +24,8 @@ if (builder.Environment.IsDevelopment())
             });
     });
 }
+
+builder.Services.AddMemoryCache();
 
 builder.Services
     .AddAuthenticationJwtBearer(s => s.SigningKey = builder.Configuration["JwtSecretKey"])
@@ -61,7 +64,7 @@ await app.UseDatabaseMigrations();
 
 app.Seed();
 
-app.UseExceptionHandler(_ => { });
+app.UseGlobalExceptionHandler();
 
 app.UseAuthentication();
 app.UseAuthorization();
