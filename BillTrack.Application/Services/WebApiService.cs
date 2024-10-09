@@ -79,7 +79,7 @@ public class WebApiService : IWebApiService
 
         if (entity == null)
         {
-            throw new NotFoundException($"Entity with ID {id} not found.");
+            throw new NotFoundException(id);
         }
 
         return entity;

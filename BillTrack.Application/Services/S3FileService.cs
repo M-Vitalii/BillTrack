@@ -26,7 +26,7 @@ public class S3FileService : IS3FileService
         await _s3Client.PutObjectAsync(request);
     }
 
-    public async Task<string> GetPresignedUrl(string bucketName, string objectKey, double expireMinutes = 15)
+    public async Task<string?> GetPresignedUrl(string bucketName, string objectKey, double expireMinutes = 15)
     {
         var request = new GetPreSignedUrlRequest
         {

@@ -1,17 +1,14 @@
-using System.Text.Json;
 using Amazon.Lambda.Core;
 using Amazon.Lambda.Serialization.SystemTextJson;
 using Amazon.Lambda.SQSEvents;
 using Amazon.S3;
 using Amazon.SQS;
-using BillTrack.Core.Contracts.SqsMessages;
 using BillTrack.Core.Interfaces.Services;
 using BillTrack.Core.Models;
 using BillTrack.Worker.Configurations;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Serilog;
-using Serilog.Context;
 using Serilog.Formatting.Json;
 
 

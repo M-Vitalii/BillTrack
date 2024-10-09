@@ -53,7 +53,7 @@ public class CreatedInvoiceMessageHandler : IMessageHandler<CreatedInvoice>
                 if (invoice == null)
                 {
                     Log.Logger.Error($"invoice - {invoice}");
-                    throw new NotFoundException("Invalid invoice");
+                    throw new NotFoundException(invoiceMessage.InvoiceId);
                 }
 
                 var invoiceUrl = GenerateInvoiceUrl(fileName);

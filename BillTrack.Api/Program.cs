@@ -25,6 +25,8 @@ if (builder.Environment.IsDevelopment())
     });
 }
 
+builder.Services.AddMemoryCache();
+
 builder.Services
     .AddAuthenticationJwtBearer(s => s.SigningKey = builder.Configuration["JwtSecretKey"])
     .AddAuthorization()

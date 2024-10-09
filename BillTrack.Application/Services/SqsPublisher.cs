@@ -1,35 +1,25 @@
-using System.Collections.Concurrent;
 using System.Text.Json;
 using Amazon.SQS;
 using Amazon.SQS.Model;
 using BillTrack.Core.Interfaces.Models;
 using BillTrack.Core.Interfaces.Services;
-using Microsoft.Extensions.Logging;
 
 namespace BillTrack.Application.Services;
 
 public class SqsPublisher : ISqsPublisher
 {
     private readonly IAmazonSQS _sqs;
-    private readonly ConcurrentDictionary<string, string> _cachedQueueUrl;
+    private readonly Dictionary<string, string> _cachedQueueUrl;
 
     public SqsPublisher(IAmazonSQS sqs)
     {
         _sqs = sqs;
-        _cachedQueueUrl = new ConcurrentDictionary<string, string>();
+        _cachedQueueUrl = new Dictionary<string, string>();
     }
 
     public async Task PublishMessageAsync<T>(string queueName, T message) where T : IMessage
     {
-        string queueUrl;
-        try
-        {
-            queueUrl = await GetQueueUrlAsync(queueName);
-        }
-        catch (QueueDoesNotExistException ex)
-        {
-            throw;
-        }
+        var queueUrl = await GetQueueUrlAsync(queueName);
 
         var request = new SendMessageRequest
         {
@@ -48,18 +38,13 @@ public class SqsPublisher : ISqsPublisher
             }
         };
 
-        try
-        {
-            await _sqs.SendMessageAsync(request);
-        }
-        catch (Exception ex)
-        {
-            throw;
-        }
+        await _sqs.SendMessageAsync(request);
     }
 
     private async Task<string> GetQueueUrlAsync(string queueName)
     {
+        GetQueueUrlResponse? response;
+        
         if (_cachedQueueUrl.TryGetValue(queueName, out var cachedUrl))
         {
             return cachedUrl;
@@ -67,15 +52,21 @@ public class SqsPublisher : ISqsPublisher
 
         try
         {
-            var response = await _sqs.GetQueueUrlAsync(queueName);
-            var queueUrl = response.QueueUrl;
-            _cachedQueueUrl[queueName] = queueUrl;
-            return queueUrl;
+            response = await _sqs.GetQueueUrlAsync(queueName);
         }
         catch (QueueDoesNotExistException)
         {
-            _cachedQueueUrl.TryRemove(queueName, out _);
+            _cachedQueueUrl.Remove(queueName);
             throw;
         }
+        
+        if (null == response || string.IsNullOrEmpty(response.QueueUrl)) {
+            throw new QueueDoesNotExistException("Error during a queue URL resolution");
+        }
+        
+        var queueUrl = response.QueueUrl;
+        _cachedQueueUrl[queueName] = queueUrl;
+        
+        return queueUrl;
     }
 }
