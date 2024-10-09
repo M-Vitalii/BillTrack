@@ -6,4 +6,5 @@ public class AwsSettings
     public string Region { get; set; } = "";
     public string WorkerQueueName { get; set; } = "";
     public string InvoiceBucketName { get; set; } = "";
+    public string EmailQueue { get; set; } = "";
 }

@@ -42,7 +42,7 @@ public class AuthService : IAuthService
 
         if (user == null || !_passwordHasher.Verify(user.Password, password))
         {
-            throw new NotFoundException("The user name and/or password is invalid.");
+            throw new UnauthorizedAccessException("The user name and/or password is invalid.");
         }
 
         return user.Id;
