@@ -11,19 +11,19 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
 
-    # Dynamically assign the environment based on the branch
+    # Dynamically assign the environment
     environment: ${{ 
       github.ref == 'refs/heads/test_deploy_prod' && 'prod' || 
       github.ref == 'refs/heads/test_deploy_stage' && 'stage' || 
       github.ref == 'refs/heads/test_deploy_dev' && 'dev' 
-      }}
+    }}
 
     steps:
       - name: Checkout Code
         uses: actions/checkout@v3
 
-      - name: Echo Environment
+      - name: Echo Environment Variable
         run: |
           echo "Branch: ${{ github.ref }}"
-          echo "Environment: ${{ env.TEST_1 }}"
-
+          echo "Environment: ${{ github.job.environment }}"
+          echo "TEST_1: ${{ env.TEST_1 }}"
