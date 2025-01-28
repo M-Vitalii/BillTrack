@@ -1,5 +1,4 @@
 name: Environment-Specific Workflow
-
 on:
   push:
     branches:
@@ -8,22 +7,38 @@ on:
       - test_deploy_stage
 
 jobs:
-  deploy:
+  determine-env:
     runs-on: ubuntu-latest
+    outputs:
+      env_name: ${{ 
+        github.ref == 'refs/heads/test_deploy_prod' && 'prod' || 
+        github.ref == 'refs/heads/test_deploy_stage' && 'stage' || 
+        github.ref == 'refs/heads/test_deploy_dev' && 'dev' 
+        }}
+    steps:
+      - run: echo "Determined environment"
 
-    # Dynamically assign the environment based on the branch
-    environment: ${{ 
-      github.ref == 'refs/heads/test_deploy_prod' && 'prod' || 
-      github.ref == 'refs/heads/test_deploy_stage' && 'stage' || 
-      github.ref == 'refs/heads/test_deploy_dev' && 'dev' 
-      }}
-
+  deploy:
+    needs: determine-env
+    runs-on: ubuntu-latest
+    environment: ${{ needs.determine-env.outputs.env_name }}
     steps:
       - name: Checkout Code
         uses: actions/checkout@v3
-
-      - name: Echo Environment
+      
+      - name: Debug Info
         run: |
-          echo "Branch: ${{ github.ref }}"
-          echo "Environment: ${{ github.job.environment }}"
+          echo "Branch name: ${{ github.ref }}"
+          echo "Current environment: ${{ github.event.deployment_status.environment }}"
+          echo "TEST_1 env var: ${{ vars.TEST_1 }}"
 
+  another-job:
+    needs: determine-env
+    runs-on: ubuntu-latest
+    environment: ${{ needs.determine-env.outputs.env_name }}
+    steps:
+      - name: Some other task
+        run: |
+          echo "Branch name: ${{ github.ref }}"
+          echo "Current environment: ${{ github.event.deployment_status.environment }}"
+          echo "TEST_1 env var: ${{ vars.TEST_1 }}"
