@@ -1,29 +1,32 @@
 name: Environment-Specific Workflow
-
 on:
   push:
     branches:
       - test_deploy_prod
       - test_deploy_dev
       - test_deploy_stage
-
 jobs:
   deploy:
     runs-on: ubuntu-latest
-
-    # Dynamically assign the environment based on the branch
     environment: ${{ 
       github.ref == 'refs/heads/test_deploy_prod' && 'prod' || 
       github.ref == 'refs/heads/test_deploy_stage' && 'stage' || 
       github.ref == 'refs/heads/test_deploy_dev' && 'dev' 
       }}
-
     steps:
       - name: Checkout Code
         uses: actions/checkout@v3
-
-      - name: Echo Environment
+      
+      - name: Debug Info
         run: |
-          echo "Branch: ${{ github.ref }}"
-          echo "Environment: ${{ github.job.environment }}"
-
+          echo "Branch name: ${{ github.ref }}"
+          echo "Current environment: ${{ github.event.deployment_status.environment }}"
+          echo "Direct environment name: ${{ job.environment }}"
+          
+      - name: List All Available Environment Variables
+        run: env
+        
+      - name: Try Different Ways to Access TEST_1
+        run: |
+          echo "Using secrets: ${{ secrets.TEST_1 }}"
+          echo "Using vars: ${{ vars.TEST_1 }}"
