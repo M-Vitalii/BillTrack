@@ -6,17 +6,22 @@ on:
       - test_deploy_dev
       - test_deploy_stage
 
-env:
-  DEPLOY_ENV: ${{ 
-    github.ref == 'refs/heads/test_deploy_prod' && 'prod' || 
-    github.ref == 'refs/heads/test_deploy_stage' && 'stage' || 
-    github.ref == 'refs/heads/test_deploy_dev' && 'dev' 
-    }}
-
 jobs:
-  deploy:
+  determine-env:
     runs-on: ubuntu-latest
-    environment: ${{ env.DEPLOY_ENV }}
+    outputs:
+      env_name: ${{ 
+        github.ref == 'refs/heads/test_deploy_prod' && 'prod' || 
+        github.ref == 'refs/heads/test_deploy_stage' && 'stage' || 
+        github.ref == 'refs/heads/test_deploy_dev' && 'dev' 
+      }}
+    steps:
+      - run: echo "Determined environment"
+
+  deploy:
+    needs: determine-env
+    runs-on: ubuntu-latest
+    environment: ${{ needs.determine-env.outputs.env_name }}
     steps:
       - name: Checkout Code
         uses: actions/checkout@v3
@@ -28,8 +33,9 @@ jobs:
           echo "TEST_1 env var: ${{ vars.TEST_1 }}"
 
   another-job:
+    needs: determine-env
     runs-on: ubuntu-latest
-    environment: ${{ env.DEPLOY_ENV }}
+    environment: ${{ needs.determine-env.outputs.env_name }}
     steps:
       - name: Some other task
         run: |
