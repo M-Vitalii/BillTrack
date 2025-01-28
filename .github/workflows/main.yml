@@ -25,5 +25,5 @@ jobs:
       - name: Echo Environment
         run: |
           echo "Branch: ${{ github.ref }}"
-          echo "Environment: ${{ env.environment }}"
+          echo "Environment: ${{ env.TEST_1 }}"
 
