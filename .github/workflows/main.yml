@@ -16,7 +16,7 @@ jobs:
       github.ref == 'refs/heads/test_deploy_prod' && 'prod' || 
       github.ref == 'refs/heads/test_deploy_stage' && 'stage' || 
       github.ref == 'refs/heads/test_deploy_dev' && 'dev' 
-    }}
+      }}
 
     steps:
       - name: Checkout Code
