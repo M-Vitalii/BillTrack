@@ -1,32 +1,41 @@
 name: Environment-Specific Workflow
+
 on:
   push:
     branches:
       - test_deploy_prod
       - test_deploy_dev
       - test_deploy_stage
+
 jobs:
-  deploy:
+  set-environment:
     runs-on: ubuntu-latest
-    environment: ${{ 
-      github.ref == 'refs/heads/test_deploy_prod' && 'prod' || 
-      github.ref == 'refs/heads/test_deploy_stage' && 'stage' || 
-      github.ref == 'refs/heads/test_deploy_dev' && 'dev' 
-      }}
+    outputs:
+      env_name: ${{ steps.set-env.outputs.environment }}
+    steps:
+      - id: set-env
+        run: |
+          if [[ $GITHUB_REF == 'refs/heads/test_deploy_prod' ]]; then
+            echo "environment=prod" >> $GITHUB_OUTPUT
+          elif [[ $GITHUB_REF == 'refs/heads/test_deploy_stage' ]]; then
+            echo "environment=stage" >> $GITHUB_OUTPUT
+          elif [[ $GITHUB_REF == 'refs/heads/test_deploy_dev' ]]; then
+            echo "environment=dev" >> $GITHUB_OUTPUT
+          fi
+
+  deploy:
+    needs: set-environment
+    runs-on: ubuntu-latest
+    environment: ${{ needs.set-environment.outputs.env_name }}
     steps:
       - name: Checkout Code
         uses: actions/checkout@v3
-      
-      - name: Debug Info
-        run: |
-          echo "Branch name: ${{ github.ref }}"
-          echo "Current environment: ${{ github.event.deployment_status.environment }}"
-          echo "Direct environment name: ${{ job.environment }}"
-          
-      - name: List All Available Environment Variables
-        run: env
-        
-      - name: Try Different Ways to Access TEST_1
-        run: |
-          echo "Using secrets: ${{ secrets.TEST_1 }}"
-          echo "Using vars: ${{ vars.TEST_1 }}"
+      # Your deployment steps
+
+  another-job:
+    needs: set-environment
+    runs-on: ubuntu-latest
+    environment: ${{ needs.set-environment.outputs.env_name }}
+    steps:
+      - name: Some other steps
+        run: echo "Using same environment"
