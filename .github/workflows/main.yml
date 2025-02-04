@@ -38,7 +38,8 @@ jobs:
     environment: ${{ needs.determine-env.outputs.env_name }}
     steps:
       - name: Some other task
+        env:
+          SQS_CHANNELS_JSON: ${{ vars.SQS_CHANNELS_JSON }}
         run: |
-          echo "Branch name: ${{ github.ref }}"
-          echo "Current environment: ${{ github.event.deployment_status.environment }}"
+          echo "SQS Channels = ${SQS_CHANNELS_JSON:-'[]'}"
           echo "TEST_1 env var: ${{ vars.TEST_1 }}"
